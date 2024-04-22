@@ -23,11 +23,57 @@ SCLK, MISO, MOSI, and DP 10 of Arduino
 #include <SPI.h>
 #include <ADXL362.h>
 
-#define SAMPLES_MOYENNE_LONG 1000
-#define SAMPLES_MOYENNE_COURT 150
+#define SAMPLES_MOYENNE_LONG 200
+#define SAMPLES_MOYENNE_COURT 50
+#define ETAT_ARRET 0
+#define ETAT_MARCHE 1
+
 
 #define LED PC13
 
+
+class Running {
+public:
+  int seuil, compte, limite = 0;
+  uint8_t etat;  // 0 = arrete, 1 = en marche
+
+  Running(int seuil, int limite) {
+    this->seuil = seuil;
+    this->limite = limite;
+    this->etat = 0;
+  }
+
+  void demarrage() {
+    this->etat = ETAT_MARCHE;
+  }
+
+  void arret() {
+    this->etat = ETAT_ARRET;
+  }
+
+  uint8_t update(double var) {
+    if (this->etat == ETAT_ARRET) {
+      if (var > this->seuil) {
+        ++compte;
+      } else {
+        this->compte = 0;
+      }
+      if (this->compte > this->limite) {
+        this->demarrage();
+      }
+    } else {
+      if (var <= this->seuil) {
+        --compte;
+      } else {
+        this->compte = 0;
+      }
+      if (this->compte < -this->limite) {
+        this->arret();
+      }
+    }
+    return this->etat;
+  }
+};
 
 class DonneesAccel {
 public:
@@ -43,12 +89,8 @@ public:
     this->nb_court = nb_court;
     this->nb_long = nb_long;
 
-    this->lire();
-
-    // Remplit la table avec la valeur initiale
-    int16_t val_init = this->valeurs[0];
-    for (int i = 0; i < nb_long; ++i) {
-      this->valeurs[i] = val_init;
+    for (int i = 0; i < this->nb_long; ++i) {
+      this->lire();
     }
   };
 
@@ -66,7 +108,7 @@ public:
     this->p_xl->readXYZTData(XValue, YValue, ZValue, Temperature);
     this->setValeurZ(ZValue);
 
-   /* Serial.print(ZValue);
+    /* Serial.print(ZValue);
     Serial.print(" a l'index ");    
     Serial.println(this->index);   */
 
@@ -74,13 +116,12 @@ public:
     this->calcMoyenneRapide();
     this->calcStdevLente();
     this->calcStdevRapide();
-    
   }
 
   int16_t getVal(int pos) {
     int16_t pos_corr = 0;
 
-    if(this->index + pos > 0) {
+    if (this->index + pos > 0) {
       pos_corr = this->index + pos;
     } else {
       pos_corr = this->index + pos + nb_long - 1;
@@ -136,12 +177,14 @@ public:
 
     this->stdevRapide = stdev;
   }
-
 };
 
 // Variables globales
 ADXL362 xl;
 DonneesAccel* donnees;
+
+Running* niveau1;
+Running* niveau2;
 
 void setup() {
 
@@ -154,6 +197,8 @@ void setup() {
   Serial.println("Start Demo: Simple Read");
 
   donnees = new DonneesAccel(&xl, SAMPLES_MOYENNE_COURT, SAMPLES_MOYENNE_LONG);
+  niveau1 = new Running(5, 60);
+  niveau2 = new Running(4, 20);
 
   digitalWrite(LED, 1);
   delay(250);
@@ -173,11 +218,30 @@ void loop() {
 
   donnees->lire();
 
-  Serial.print("Lente:");
-  Serial.println(donnees->moyenneLente + 3 * donnees->stdevLente);
+  double diff = (donnees->moyenneLente + 3 * donnees->stdevLente) - (donnees->moyenneRapide + 3 * donnees->stdevRapide);
 
-  Serial.print(",Rapide:");
-  Serial.println(donnees->moyenneRapide + 3 * donnees->stdevRapide);
+
+  Serial.print("Diff:");
+  Serial.println(diff);
+
+  Serial.print(",Niv1:");
+  Serial.println(niveau1->update(donnees->stdevRapide));
+  Serial.print(",Niv2:");
+  Serial.println(niveau2->update(donnees->stdevRapide));
+
+  Serial.print(",stdevLente:");
+  Serial.println(donnees->stdevLente);
+  Serial.print(",stdevRapide:");
+  Serial.println(donnees->stdevRapide);
+
+  Serial.print(",Max:");
+  Serial.println(2);
+  Serial.print(",Max2:");
+  Serial.println(6);
+  Serial.print(",Min:");
+  Serial.println(-2);
+
+  digitalWrite(LED, !niveau1->etat);
 
   delay(100);  // Arbitrary delay to make serial monitor easier to observe
 }
