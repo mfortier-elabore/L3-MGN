@@ -18,7 +18,7 @@ Connect SCLK, MISO, MOSI, and CSB of ADXL362 to
 SCLK, MISO, MOSI, and DP 10 of Arduino 
 (check http://arduino.cc/en/Reference/SPI for details)
  
-*/ 
+*/
 
 #include <SPI.h>
 #include <ADXL362.h>
@@ -26,128 +26,158 @@ SCLK, MISO, MOSI, and DP 10 of Arduino
 #define SAMPLES_MOYENNE_LONG 1000
 #define SAMPLES_MOYENNE_COURT 150
 
+#define LED PC13
 
+
+class DonneesAccel {
+public:
+  int16_t valeurs[SAMPLES_MOYENNE_LONG] = { 0 };
+  float moyenneRapide, moyenneLente;
+  double stdevRapide, stdevLente;
+  int index = 0;
+  int nb_court, nb_long;
+  ADXL362* p_xl;
+
+  DonneesAccel(ADXL362* p_xl, int nb_court, int nb_long) {
+    this->p_xl = p_xl;
+    this->nb_court = nb_court;
+    this->nb_long = nb_long;
+
+    this->lire();
+
+    // Remplit la table avec la valeur initiale
+    int16_t val_init = this->valeurs[0];
+    for (int i = 0; i < nb_long; ++i) {
+      this->valeurs[i] = val_init;
+    }
+  };
+
+  void setValeurZ(int16_t val) {
+    this->valeurs[index] = val;
+
+    ++this->index;
+    if (this->index >= nb_long) {
+      this->index = 0;
+    }
+  }
+
+  void lire() {
+    int16_t XValue, YValue, ZValue, Temperature;
+    this->p_xl->readXYZTData(XValue, YValue, ZValue, Temperature);
+    this->setValeurZ(ZValue);
+
+   /* Serial.print(ZValue);
+    Serial.print(" a l'index ");    
+    Serial.println(this->index);   */
+
+    this->calcMoyenneLente();
+    this->calcMoyenneRapide();
+    this->calcStdevLente();
+    this->calcStdevRapide();
+    
+  }
+
+  int16_t getVal(int pos) {
+    int16_t pos_corr = 0;
+
+    if(this->index + pos > 0) {
+      pos_corr = this->index + pos;
+    } else {
+      pos_corr = this->index + pos + nb_long - 1;
+    }
+
+    return this->valeurs[pos_corr];
+  }
+
+  void calcMoyenneLente() {
+    float moyenne = 0;
+
+    for (int i = 0; i < nb_long; ++i) {
+      moyenne += this->valeurs[i];
+    }
+
+    moyenne = moyenne / nb_long;
+
+    this->moyenneLente = moyenne;
+  };
+
+  void calcMoyenneRapide() {
+    float moyenne = 0;
+
+    for (int i = 0; i < nb_court; ++i) {
+      moyenne += this->getVal(-i);
+    }
+
+    moyenne = moyenne / nb_court;
+
+    this->moyenneRapide = moyenne;
+  };
+
+  void calcStdevLente() {
+    double sq_sum = 0;
+
+    for (int i = 0; i < this->nb_long; ++i) {
+      sq_sum += this->valeurs[i] * this->valeurs[i];
+    }
+
+    double stdev = std::sqrt(sq_sum / this->nb_long - this->moyenneLente * this->moyenneLente);
+
+    this->stdevLente = stdev;
+  }
+
+  void calcStdevRapide() {
+    double sq_sum = 0;
+
+    for (int i = 0; i < this->nb_court; ++i) {
+      sq_sum += this->getVal(-i) * this->getVal(-i);
+    }
+
+    double stdev = std::sqrt(sq_sum / this->nb_court - this->moyenneRapide * this->moyenneRapide);
+
+    this->stdevRapide = stdev;
+  }
+
+};
+
+// Variables globales
 ADXL362 xl;
+DonneesAccel* donnees;
 
-int16_t temp;
-int16_t XValue, YValue, ZValue, Temperature;
+void setup() {
 
-uint16_t valeurs[SAMPLES_MOYENNE_LONG] = {0};
-uint16_t valeurs_court[SAMPLES_MOYENNE_COURT] = {0};
+  pinMode(LED, OUTPUT);
 
-void setup(){
-  
   Serial.begin(9600);
-  xl.begin(10);                   // Setup SPI protocol, issue device soft reset
-  xl.beginMeasure();              // Switch ADXL362 to measure mode  
-	
+  xl.begin(10);       // Setup SPI protocol, issue device soft reset
+  xl.beginMeasure();  // Switch ADXL362 to measure mode
+
   Serial.println("Start Demo: Simple Read");
 
-  xl.readXYZTData(XValue, YValue, ZValue, Temperature);
+  donnees = new DonneesAccel(&xl, SAMPLES_MOYENNE_COURT, SAMPLES_MOYENNE_LONG);
 
-  for(int i = 0; i < SAMPLES_MOYENNE_LONG; ++i) {
-    valeurs[i] = ZValue;
-  }
-
-  for(int i = 0; i < SAMPLES_MOYENNE_COURT; ++i) {
-    valeurs_court[i] = ZValue;
-  }
-
-
+  digitalWrite(LED, 1);
+  delay(250);
+  digitalWrite(LED, 0);
+  delay(250);
+  digitalWrite(LED, 1);
+  delay(250);
+  digitalWrite(LED, 0);
+  delay(250);
+  digitalWrite(LED, 1);
+  delay(250);
+  digitalWrite(LED, 0);
+  delay(250);
 }
 
-float calcMoyenne(){
-  float moyenne = 0;
+void loop() {
 
-  for(int i = 0; i < SAMPLES_MOYENNE_LONG; ++i) {
-    moyenne += valeurs[i];
-  }
+  donnees->lire();
 
-  moyenne = moyenne / SAMPLES_MOYENNE_LONG;
+  Serial.print("Lente:");
+  Serial.println(donnees->moyenneLente + 3 * donnees->stdevLente);
 
-  return moyenne;
+  Serial.print(",Rapide:");
+  Serial.println(donnees->moyenneRapide + 3 * donnees->stdevRapide);
+
+  delay(100);  // Arbitrary delay to make serial monitor easier to observe
 }
-
-float calcMoyenneCourt(){
-  float moyenne = 0;
-
-  for(int i = 0; i < SAMPLES_MOYENNE_COURT; ++i) {
-    moyenne += valeurs_court[i];
-  }
-
-  moyenne = moyenne / SAMPLES_MOYENNE_COURT;
-
-  return moyenne;
-}
-
-
-double calcStdev(float moyenne) {
-  double sq_sum = 0;
-
-  for(int i = 0; i < SAMPLES_MOYENNE_LONG; ++i) {
-    sq_sum += valeurs[i]*valeurs[i];
-  }
-
-  double stdev = std::sqrt(sq_sum / SAMPLES_MOYENNE_LONG - moyenne * moyenne);
-
-  return stdev;
-}
-
-double calcStdevCourt(float moyenne) {
-  double sq_sum = 0;
-
-  for(int i = 0; i < SAMPLES_MOYENNE_COURT; ++i) {
-    sq_sum += valeurs_court[i]*valeurs_court[i];
-  }
-
-  double stdev = std::sqrt(sq_sum / SAMPLES_MOYENNE_COURT - moyenne * moyenne);
-
-  return stdev;
-}
-
-uint16_t i = 0;
-uint16_t j = 0;
-
-void loop(){
-  
-  // read all three axis in burst to ensure all measurements correspond to same sample time
-  xl.readXYZTData(XValue, YValue, ZValue, Temperature);  
-  Serial.print("ZVALUE:");
-  Serial.println(ZValue);	
-
-  valeurs[i] = ZValue;
-  valeurs_court[j] = ZValue;
-
-  ++i;
-  if(i>=SAMPLES_MOYENNE_LONG) {
-    i = 0;
-  }
-
-  ++j;
-  if(j>=SAMPLES_MOYENNE_COURT) {
-    j = 0;
-  }
-
-  float moyenne = calcMoyenne();
-  double stdev = calcStdev(moyenne);
-
-  float moyenneCourt = calcMoyenneCourt();
-  double stdevCourt = calcStdevCourt(moyenneCourt);
-
-  Serial.print(",MOY:");
-  Serial.println(moyenne+3*stdev);
-
-  Serial.print(",MOY2:");
-  Serial.println(moyenneCourt+3*stdevCourt);
-
-/*
-  Serial.print(",lim+:");
-  Serial.println(stdev*3+moyenne);
-  
-  Serial.print(",lim-:");
-  Serial.println(moyenne-stdev*3);*/
-   
-  delay(100);                // Arbitrary delay to make serial monitor easier to observe
-
-}
-
