@@ -1,22 +1,10 @@
 /*
- ADXL362_SimpleRead.ino -  Simple XYZ axis reading example
- for Analog Devices ADXL362 - Micropower 3-axis accelerometer
- go to http://www.analog.com/ADXL362 for datasheet
- 
- 
- License: CC BY-SA 3.0: Creative Commons Share-alike 3.0. Feel free 
- to use and abuse this code however you'd like. If you find it useful
- please attribute, and SHARE-ALIKE!
- 
- Created June 2012
- by Anne Mahaffey - hosted on http://annem.github.com/ADXL362
+ L3-MGN - Test avec ADXL362
 
- Modified May 2013
- by Jonathan Ruiz de Garibay
- 
-Connect SCLK, MISO, MOSI, and CSB of ADXL362 to
-SCLK, MISO, MOSI, and DP 10 of Arduino 
-(check http://arduino.cc/en/Reference/SPI for details)
+ Le but est de détecter que l'équipement est en marche, en suivant 
+ la variation des vibrations détectées.
+
+ MFortier - 2024-04-22
  
 */
 
@@ -200,18 +188,9 @@ void setup() {
   niveau1 = new Running(5, 60);
   niveau2 = new Running(4, 20);
 
-  digitalWrite(LED, 1);
-  delay(250);
   digitalWrite(LED, 0);
   delay(250);
   digitalWrite(LED, 1);
-  delay(250);
-  digitalWrite(LED, 0);
-  delay(250);
-  digitalWrite(LED, 1);
-  delay(250);
-  digitalWrite(LED, 0);
-  delay(250);
 }
 
 void loop() {
@@ -220,7 +199,7 @@ void loop() {
 
   double diff = (donnees->moyenneLente + 3 * donnees->stdevLente) - (donnees->moyenneRapide + 3 * donnees->stdevRapide);
 
-
+  int depart = millis();
   Serial.print("Diff:");
   Serial.println(diff);
 
@@ -243,5 +222,5 @@ void loop() {
 
   digitalWrite(LED, !niveau1->etat);
 
-  delay(100);  // Arbitrary delay to make serial monitor easier to observe
+  delay(100);
 }
