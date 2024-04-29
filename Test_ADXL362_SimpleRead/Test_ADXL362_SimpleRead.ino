@@ -18,25 +18,32 @@
 
 
 #define LED PC13
+#define LED1 PB7
+#define LED2 PB8
+#define LED3 PB9
 
 
 class Running {
 public:
-  int seuil, compte, limite = 0;
+  float seuil;
+  int compte, limite, led = 0;
   uint8_t etat;  // 0 = arrete, 1 = en marche
 
-  Running(int seuil, int limite) {
+  Running(float seuil, int limite, int led) {
     this->seuil = seuil;
     this->limite = limite;
     this->etat = 0;
+    this->led = led;
   }
 
   void demarrage() {
     this->etat = ETAT_MARCHE;
+    digitalWrite(this->led, HIGH);
   }
 
   void arret() {
     this->etat = ETAT_ARRET;
+    digitalWrite(this->led, LOW);
   }
 
   uint8_t update(double var) {
@@ -173,10 +180,14 @@ DonneesAccel* donnees;
 
 Running* niveau1;
 Running* niveau2;
+Running* niveau3;
 
 void setup() {
 
   pinMode(LED, OUTPUT);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
 
   Serial.begin(9600);
   xl.begin(10);       // Setup SPI protocol, issue device soft reset
@@ -185,12 +196,22 @@ void setup() {
   Serial.println("Start Demo: Simple Read");
 
   donnees = new DonneesAccel(&xl, SAMPLES_MOYENNE_COURT, SAMPLES_MOYENNE_LONG);
-  niveau1 = new Running(5, 60);
-  niveau2 = new Running(4, 20);
+  niveau1 = new Running(5, 60, LED1);
+  niveau2 = new Running(5.5, 20, LED2);
+  niveau3 = new Running(4.5, 100, LED2);
 
   digitalWrite(LED, 0);
   delay(250);
-  digitalWrite(LED, 1);
+  digitalWrite(LED, 1);/*
+  digitalWrite(LED1, 1);
+  delay(250);
+  digitalWrite(LED1, 0);
+  digitalWrite(LED2, 1);
+  delay(250);
+  digitalWrite(LED2, 0);
+  digitalWrite(LED3, 1);
+  delay(250);
+  digitalWrite(LED3, 0);*/
 }
 
 void loop() {
@@ -203,10 +224,16 @@ void loop() {
   Serial.print("Diff:");
   Serial.println(diff);
 
+  niveau1->update(donnees->stdevRapide);
+  niveau2->update(donnees->stdevRapide);
+  niveau3->update(donnees->stdevLente);
+  
   Serial.print(",Niv1:");
-  Serial.println(niveau1->update(donnees->stdevRapide));
+  Serial.println(niveau1->etat);
   Serial.print(",Niv2:");
-  Serial.println(niveau2->update(donnees->stdevRapide));
+  Serial.println(niveau2->etat);
+  Serial.print(",Niv3:");
+  Serial.println(niveau3->etat);
 
   Serial.print(",stdevLente:");
   Serial.println(donnees->stdevLente);
@@ -219,8 +246,6 @@ void loop() {
   Serial.println(6);
   Serial.print(",Min:");
   Serial.println(-2);
-
-  digitalWrite(LED, !niveau1->etat);
 
   delay(100);
 }
