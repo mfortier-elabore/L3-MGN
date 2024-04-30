@@ -196,9 +196,9 @@ void setup() {
   Serial.println("Start Demo: Simple Read");
 
   donnees = new DonneesAccel(&xl, SAMPLES_MOYENNE_COURT, SAMPLES_MOYENNE_LONG);
-  niveau1 = new Running(5, 60, LED1);
-  niveau2 = new Running(5.5, 20, LED2);
-  niveau3 = new Running(4.5, 100, LED2);
+  niveau1 = new Running(6, 60, LED2);
+  niveau2 = new Running(12, 60, LED3);
+  niveau3 = new Running(20, 60, LED1); 
 
   digitalWrite(LED, 0);
   delay(250);
@@ -226,7 +226,7 @@ void loop() {
 
   niveau1->update(donnees->stdevRapide);
   niveau2->update(donnees->stdevRapide);
-  niveau3->update(donnees->stdevLente);
+  niveau3->update(donnees->stdevRapide);
   
   Serial.print(",Niv1:");
   Serial.println(niveau1->etat);
@@ -246,6 +246,24 @@ void loop() {
   Serial.println(6);
   Serial.print(",Min:");
   Serial.println(-2);
+
+  if(niveau3->etat) {
+    digitalWrite(niveau3->led, HIGH);
+    digitalWrite(niveau2->led, LOW);
+    digitalWrite(niveau1->led, LOW);
+  } else if(niveau2->etat) {
+    digitalWrite(niveau3->led, LOW);
+    digitalWrite(niveau2->led, HIGH);
+    digitalWrite(niveau1->led, LOW);    
+  } else if(niveau1->etat) {
+    digitalWrite(niveau3->led, LOW);
+    digitalWrite(niveau2->led, LOW);
+    digitalWrite(niveau1->led, HIGH);    
+  } else {
+    digitalWrite(niveau3->led, LOW);
+    digitalWrite(niveau2->led, LOW);
+    digitalWrite(niveau1->led, LOW);    
+  }
 
   delay(100);
 }
