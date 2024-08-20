@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=SOMv3_standalone.X
+PROJECTNAME=SOMv3.X
 
 # Active Configuration
 DEFAULTCONF=default
