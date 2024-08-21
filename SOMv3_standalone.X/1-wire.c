@@ -246,8 +246,8 @@ bool ow_write8bytes(uint16_t p_uAddress, uint8_t * p_pData) {
 
         // Écriture dans le scratchpad
         ow_writeByte(OW_COMMAND_WRITE_SCRATCHPAD);
-        ow_writeByte(p_uAddress & 0xFF);
-        ow_writeByte((p_uAddress >> 8) & 0xFF);
+        ow_writeByte((uint8_t)p_uAddress & 0xFF);
+        ow_writeByte((uint8_t)(p_uAddress >> 8) & 0xFF);
 
         for (uByte = 0; uByte < nbBytes; uByte++) {
             ow_writeByte(p_pData[uByte]);
@@ -290,8 +290,8 @@ bool ow_write8bytes(uint16_t p_uAddress, uint8_t * p_pData) {
             ow_writeByte(OW_DS1972_COMMAND_COPY_SCRATCHPAD);
 
             // ... de l'adresse ... 
-            ow_writeByte(p_uAddress & 0xFF);
-            ow_writeByte((p_uAddress >> 8) & 0xFF);
+            ow_writeByte((uint8_t)p_uAddress & 0xFF);
+            ow_writeByte((uint8_t)(p_uAddress >> 8) & 0xFF);
 
             // ... et du "ending offset/data status byte (E/S)"
             ow_writeByte(ucResponse);
@@ -462,7 +462,7 @@ void ow_readMemory_Safe(uint8_t * p_pROM, uint16_t p_uAddress, void *p_pData, ui
         ow_readMemory(p_pROM, p_uAddress, p_pData, p_uLength);
 
         if (flag_crc) {
-            ow_readMemory(p_pROM, addresse_crc, crc, sizeof (uint8_t));
+            ow_readMemory(p_pROM, addresse_crc, &crc, sizeof (uint8_t));
         }
     } while (flag_crc && (crc != do_crc(p_pData, p_uLength)) && (nbEssais < NB_ESSAIS_LECTURE_MAX));
 }
@@ -509,7 +509,7 @@ void ow_readMemory(uint8_t * p_pROM, uint16_t p_uAddress, void *p_pData, uint8_t
 
             // There is no checksum so we can break the read before the end
             if (p_uLength < uPageSize) {
-                uPageSize = p_uLength + expandL + expandR;
+                uPageSize = (uint8_t)(p_uLength + expandL + expandR);
             }
             break;
         case OW_FAMILY_DS1977:
@@ -519,13 +519,15 @@ void ow_readMemory(uint8_t * p_pROM, uint16_t p_uAddress, void *p_pData, uint8_t
             bChecksum = true;
             uPageSize = 66;
             break;
+        default:
+            break;
     }
 
     ow_reset();
     ow_skipROM();
     ow_writeByte(uReadCommand);
-    ow_writeByte(startAddress & 0xFF);
-    ow_writeByte((startAddress >> 8) & 0xFF);
+    ow_writeByte((uint8_t)startAddress & 0xFF);
+    ow_writeByte((uint8_t)(startAddress >> 8) & 0xFF);
 
     if (bPassword) {
         // Supply the password

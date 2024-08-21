@@ -418,6 +418,10 @@ void ecrireNouvelleCartouche() {
     //} while (!success);
     // Commande d'écriture de la date de retrait au prochain cycle
     prochaineEcriture_epoch = maintenant_epoch;
+    
+    if(success){
+    	printf("Success.\n");
+    }
 }
 
 /**

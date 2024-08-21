@@ -40,7 +40,8 @@ unsigned char OW_read_byte(void);
 #define IO_1W_SetHigh()            do { fake1wPinValue = 1; } while(0)
 #define IO_1W_SetLow()             do { fake1wPinValue = 0; } while(0)
 #define IO_1W_GetValue()           fake1wPinValue
-#define __delay_us(uint8_t)    do {} while(0);
+#define __delay_us(x)              do { } while(0);
+#define __delay_ms(x)              do { } while(0);
 uint8_t fake1wPinValue = 0;
 uint8_t fake1wPinDirection = 0;
 #endif

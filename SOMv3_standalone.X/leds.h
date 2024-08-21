@@ -9,8 +9,17 @@
 #ifndef LEDS_H
 #define	LEDS_H
 
+#include <stdint.h>
+#include <stdio.h>
+
 #ifdef XC8_TOOLCHAIN
 #include <xc.h>
+#include "mcc_generated_files/system/system.h"
+#else
+uint8_t fakeLedPinValue = 0;
+#define IO_LED_SetHigh()            do { fakeLedPinValue = 1; } while(0)
+#define IO_LED_SetLow()             do { fakeLedPinValue = 0; } while(0)
+#define IO_LED_Toggle()             do { fakeLedPinValue = ~fakeLedPinValue; } while(0)
 #endif
 
 // PWM de la LED

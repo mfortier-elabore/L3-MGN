@@ -9,17 +9,20 @@
 #ifndef CARTOUCHE_H
 #define	CARTOUCHE_H
 
-//#define TEST
-
-#ifdef XC8_TOOLCHAIN
-#include <xc.h>
-#include "mcc_generated_files/system/system.h"
-#endif
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
 #include <stdint.h>
+
+#ifdef XC8_TOOLCHAIN
+#include <xc.h>
+#include "mcc_generated_files/system/system.h"
+#else // Définitions pour les tests unitaires
+uint8_t fakeMem[16];
+#define DATAEE_WriteByte(x, y)	do { fakeMem[x] = y; } while(0);
+#define DATAEE_ReadByte(x)	fakeMem[x];
+#endif
+
 
 #include "1-wire.h"
 #include "MCP7941X.h"

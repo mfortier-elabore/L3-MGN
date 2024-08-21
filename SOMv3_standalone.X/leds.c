@@ -6,8 +6,6 @@
  *    Rev1 : 2024-08-20 - Modifications pour L3-MGN
  */
 
-#include <xc.h>
-#include "mcc_generated_files/system/system.h"
 #include "leds.h"
 
 // deux variables globales pour la gestin des modes pour les dels

@@ -25,11 +25,11 @@ void MCP7941X_setTime(struct tm * temps) {
     I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, CONTROL_REG, 0x40);
     __delay_ms(100);
 
-    uint8_t min_raw = toBCD(temps->tm_min) & MIN_MASQUE;
-    uint8_t heure_raw = toBCD(temps->tm_hour) & HEURE_MASQUE; // GMT-4
-    uint8_t jour_raw = toBCD(temps->tm_mday) & JOUR_MASQUE;
-    uint8_t mois_raw = toBCD(temps->tm_mon)& MOIS_MASQUE;
-    uint8_t an_raw = toBCD(temps->tm_year - 100);
+    uint8_t min_raw = toBCD((uint8_t)temps->tm_min) & MIN_MASQUE;
+    uint8_t heure_raw = toBCD((uint8_t)temps->tm_hour) & HEURE_MASQUE; // GMT-4
+    uint8_t jour_raw = toBCD((uint8_t)temps->tm_mday) & JOUR_MASQUE;
+    uint8_t mois_raw = toBCD((uint8_t)temps->tm_mon)& MOIS_MASQUE;
+    uint8_t an_raw = toBCD((uint8_t)temps->tm_year - 100);
 
     I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_DATE, jour_raw);
     I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_MONTH, mois_raw);
@@ -53,7 +53,7 @@ uint8_t toBCD(uint8_t val_int) {
  * @return 
  */
 uint8_t fromBCD(uint8_t raw) {
-    return (raw & 0x0F) + 10 * (raw >> 4);
+    return (raw & 0xF) + (uint8_t)(10 * (raw >> 4));
 }
 
 void MCP7941X_getTime(struct tm * t) {

@@ -5,7 +5,7 @@ extern "C"
 
 #include "CppUTest/TestHarness.h"
 
-TEST_GROUP(Test)
+TEST_GROUP(Leds)
 {
 
     
@@ -20,7 +20,7 @@ TEST_GROUP(Test)
     }*/
 };
 
-TEST(Test, Create)
+TEST(Leds, Create)
 {
   FAIL("Start here");
 }

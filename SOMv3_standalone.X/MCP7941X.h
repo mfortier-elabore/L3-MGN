@@ -7,20 +7,24 @@
  *      Rev1 : 2024-08-20 - Modifications pour L3-MGN
  */
 
-// This is a guard condition so that contents of this file are not included
-// more than once.  
 #ifndef MCP7941X_H
 #define	MCP7941X_H
-//#define TEST
-
-//#include "I2C.h"
-#ifdef XC8_TOOLCHAIN
-#include <xc.h>
-#include "mcc_generated_files/system/system.h"
-#endif
 
 #include <time.h>
 #include "CFH.h"
+
+#ifdef XC8_TOOLCHAIN
+#include <xc.h>
+#include "mcc_generated_files/system/system.h"
+#else
+uint8_t fakeMemRTC[16];
+uint8_t fakeMemEE[0xFF];
+
+#define I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, REG_ADDR, VAL)	do { fakeMemRTC[REG_ADDR] = VAL; } while (0)
+#define I2C_Read1ByteRegister(MCP7941X_RTC_ADDR, REG_ADDR)		fakeMemRTC[REG_ADDR]
+#define I2C_ReadDataBlock(MCP7941X_EE_ADDR, REG_ADDR, temp, size)	memcpy(temp, &fakeMemEE+REG_ADDR, size)
+#endif
+
 
 
 // RTC chip address
