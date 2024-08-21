@@ -12,17 +12,24 @@
 
 #include <time.h>
 #include "CFH.h"
+#include "I2CHelper.h"
 
 #ifdef XC8_TOOLCHAIN
 #include <xc.h>
-#include "mcc_generated_files/system/system.h"
-#else
-uint8_t fakeMemRTC[16];
-uint8_t fakeMemEE[0xFF];
+#include <stdint.h>
+#include <stdio.h>
 
-#define I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, REG_ADDR, VAL)	do { fakeMemRTC[REG_ADDR] = VAL; } while (0)
-#define I2C_Read1ByteRegister(MCP7941X_RTC_ADDR, REG_ADDR)		fakeMemRTC[REG_ADDR]
-#define I2C_ReadDataBlock(MCP7941X_EE_ADDR, REG_ADDR, temp, size)	memcpy(temp, &fakeMemEE+REG_ADDR, size)
+#include "mcc_generated_files/system/system.h"
+#include "mcc_generated_files/i2c_host/i2c_host_interface.h"
+#include "mcc_generated_files/nvm/nvm.h"
+#else
+extern uint8_t fakeEEMem[0xFF];
+
+typedef uint8_t eeprom_data_t;
+typedef uint8_t eeprom_address_t;
+
+eeprom_data_t EEPROM_Read(eeprom_address_t address);
+void EEPROM_Write(eeprom_address_t address, eeprom_data_t p_data);
 #endif
 
 

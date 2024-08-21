@@ -7,22 +7,39 @@
  */
 #include "MCP7941X.h"
 
+#ifdef XC8_TOOLCHAIN
+#else
+uint8_t fakeEEMem[0xFF];
+
+eeprom_data_t EEPROM_Read(eeprom_address_t address) {
+    return fakeEEMem[address];
+}
+
+void EEPROM_Write(eeprom_address_t address, eeprom_data_t data) {
+    fakeEEMem[address] = data;
+}
+#endif
+
 /**
  * \brief Fonction pour écrire le temps dans le RTC local
  * @param temps
  */
 void MCP7941X_setTime(struct tm * temps) {
     // Enable -> VBATEN
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_DAY, 0x08);
+    uint8_t data = 0x08;
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, RTCC_DAY, &data);
 
     // ST -> start OSC
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_SECONDS, 0x80);
+    data = 0x80;
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, RTCC_SECONDS, &data);
 
     // Format 24h
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_HOUR, 0x01);
+    data = 0x01;
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, RTCC_HOUR, &data);
 
     // Config sortie 1Hz
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, CONTROL_REG, 0x40);
+    data = 0x40;
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, CONTROL_REG, &data);
     __delay_ms(100);
 
     uint8_t min_raw = toBCD((uint8_t)temps->tm_min) & MIN_MASQUE;
@@ -30,12 +47,12 @@ void MCP7941X_setTime(struct tm * temps) {
     uint8_t jour_raw = toBCD((uint8_t)temps->tm_mday) & JOUR_MASQUE;
     uint8_t mois_raw = toBCD((uint8_t)temps->tm_mon)& MOIS_MASQUE;
     uint8_t an_raw = toBCD((uint8_t)temps->tm_year - 100);
-
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_DATE, jour_raw);
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_MONTH, mois_raw);
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_YEAR, an_raw);
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_HOUR, heure_raw);
-    I2C_Write1ByteRegister(MCP7941X_RTC_ADDR, RTCC_MINUTES, min_raw);
+    
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, RTCC_DATE, &jour_raw);
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, RTCC_MONTH, &mois_raw);
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, RTCC_YEAR, &an_raw);
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, RTCC_HOUR, &heure_raw);
+    I2CHelper_WriteRegister(MCP7941X_RTC_ADDR, RTCC_MINUTES, &min_raw);
 }
 
 /**
@@ -44,7 +61,7 @@ void MCP7941X_setTime(struct tm * temps) {
  * @return 
  */
 uint8_t toBCD(uint8_t val_int) {
-    return ((val_int / 10) << 4) | (val_int % 10);
+    return (uint8_t)((val_int / 10) << 4) | (val_int % 10);
 }
 
 /**
@@ -53,23 +70,28 @@ uint8_t toBCD(uint8_t val_int) {
  * @return 
  */
 uint8_t fromBCD(uint8_t raw) {
-    return (raw & 0xF) + (uint8_t)(10 * (raw >> 4));
+    return (raw & 0x0F) + (uint8_t)(10 * (raw >> 4));
 }
 
 void MCP7941X_getTime(struct tm * t) {
     uint8_t jour_raw, mois_raw, an_raw, heure_raw, min_raw, sec_raw;
 
     // lecture I2C
-    jour_raw = I2C_Read1ByteRegister(MCP7941X_RTC_ADDR, RTCC_DATE);
+    I2CHelper_ReadRegister(MCP7941X_RTC_ADDR, RTCC_DATE, &jour_raw);
     jour_raw = jour_raw & JOUR_MASQUE;
-    mois_raw = I2C_Read1ByteRegister(MCP7941X_RTC_ADDR, RTCC_MONTH);
+    
+    I2CHelper_ReadRegister(MCP7941X_RTC_ADDR, RTCC_MONTH, &mois_raw);
     mois_raw = mois_raw & MOIS_MASQUE;
-    an_raw = I2C_Read1ByteRegister(MCP7941X_RTC_ADDR, RTCC_YEAR);
-    sec_raw = I2C_Read1ByteRegister(MCP7941X_RTC_ADDR, RTCC_SECONDS);
+    
+    I2CHelper_ReadRegister(MCP7941X_RTC_ADDR, RTCC_YEAR, &an_raw);
+    
+    I2CHelper_ReadRegister(MCP7941X_RTC_ADDR, RTCC_SECONDS, &sec_raw);
     sec_raw = sec_raw & SEC_MASQUE;
-    min_raw = I2C_Read1ByteRegister(MCP7941X_RTC_ADDR, RTCC_MINUTES);
+    
+    I2CHelper_ReadRegister(MCP7941X_RTC_ADDR, RTCC_MINUTES, &min_raw);
     min_raw = min_raw & MIN_MASQUE;
-    heure_raw = I2C_Read1ByteRegister(MCP7941X_RTC_ADDR, RTCC_HOUR);
+    
+    I2CHelper_ReadRegister(MCP7941X_RTC_ADDR, RTCC_HOUR, &heure_raw);
     heure_raw = heure_raw & HEURE_MASQUE;
 
     // Convertir du BDC et met à jour la struct globale
@@ -88,7 +110,7 @@ void MCP7941X_getTime(struct tm * t) {
 void getIdBase(uint8_t * idBase) {
     uint8_t byte;
     for (uint8_t i = 0; i < 8; ++i) {
-        byte = DATAEE_ReadByte(MEMORY_ADDRESS_BASE_SERIAL + i);
+        byte = EEPROM_Read(MEMORY_ADDRESS_BASE_SERIAL + i);
         idBase[i] = byte;
     }
 }
@@ -100,7 +122,7 @@ void setIdBase() {
 
     // Le ID provient de l'adresse unique du RTC
     uint8_t temp[8];
-    I2C_ReadDataBlock(MCP7941X_EE_ADDR, 0xF0, temp, 8 * sizeof (uint8_t));
+    I2CHelper_ReadMultipleRegisters(MCP7941X_EE_ADDR, EUI64_NODE_ADDRESS, &temp[0], 8 * sizeof (uint8_t));
 
     uint8_t id[8] = {0};
     getIdBase(id);
@@ -111,29 +133,6 @@ void setIdBase() {
 
     // Écriture des 8 bytes de l'adresse
     for (uint8_t i = 0; i < 8; ++i) {
-        DATAEE_WriteByte(MEMORY_ADDRESS_BASE_SERIAL + i, temp[i]);
+        EEPROM_Write(MEMORY_ADDRESS_BASE_SERIAL + i, temp[i]);
     }
 }
-
-/*
-void MCP7941X_runTests(void) {
-    uint8_t id[8];
-
-    //MCP7941X_getID(&id);
-
-    setIdBase();
-
-    uint8_t jour, mois, an;
-    uint8_t heure, min, sec;
-
-    MCP7941X_get_date(&jour, &mois, &an);
-
-    MCP7941X_get_time(&heure, &min, &sec);
-
-    if (an == 0x80) {
-        MCP7941X_set_date_time(9, 4, 23, 16, 10);
-    }
-
-    uint32_t epoch = MCP7941X_getTime();
-
-}*/

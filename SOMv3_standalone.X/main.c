@@ -28,6 +28,7 @@
 */
 #ifdef XC8_TOOLCHAIN
 #include "mcc_generated_files/system/system.h"
+#include "CFH.h"
 
 /*
     Main application
@@ -41,19 +42,11 @@ int main(void)
     // Use the following macros to: 
 
     // Enable the Global Interrupts 
-    //INTERRUPT_GlobalInterruptEnable(); 
+    INTERRUPT_GlobalInterruptEnable(); 
 
     // Disable the Global Interrupts 
-    //INTERRUPT_GlobalInterruptDisable(); 
+    INTERRUPT_GlobalInterruptDisable(); 
 
-
-    while(1)
-    {
-    }    
-    
-    /*
-     * Main provenant de O1-CFH
-      
     while (1) {
         //MCP7941X_runTests();
 
@@ -64,7 +57,5 @@ int main(void)
 
         CLRWDT();
     }
-     
-     */
 }
 #endif

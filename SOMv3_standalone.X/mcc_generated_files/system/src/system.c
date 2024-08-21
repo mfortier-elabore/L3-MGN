@@ -44,6 +44,7 @@ void SYSTEM_Initialize(void)
     PIN_MANAGER_Initialize();
     CLKREF_Initialize();
     I2C1_Host_Initialize();
+    NVM_Initialize();
     UART1_Initialize();
     INTERRUPT_Initialize();
 }

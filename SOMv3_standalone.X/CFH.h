@@ -18,7 +18,7 @@
 #include <xc.h>
 #include "mcc_generated_files/system/system.h"
 #else // Définitions pour les tests unitaires
-uint8_t fakeMem[16];
+extern uint8_t fakeMem[16];
 #define DATAEE_WriteByte(x, y)	do { fakeMem[x] = y; } while(0);
 #define DATAEE_ReadByte(x)	fakeMem[x];
 #endif

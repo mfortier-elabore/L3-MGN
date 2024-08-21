@@ -42,8 +42,8 @@ unsigned char OW_read_byte(void);
 #define IO_1W_GetValue()           fake1wPinValue
 #define __delay_us(x)              do { } while(0);
 #define __delay_ms(x)              do { } while(0);
-uint8_t fake1wPinValue = 0;
-uint8_t fake1wPinDirection = 0;
+extern uint8_t fake1wPinValue;
+extern uint8_t fake1wPinDirection;
 #endif
 
 typedef struct {

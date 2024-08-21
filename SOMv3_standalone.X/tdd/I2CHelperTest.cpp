@@ -1,24 +1,24 @@
 extern "C"
 {
-#include "Test.h"
+#include "I2CHelper.h"
 }
 
 #include "CppUTest/TestHarness.h"
 
-TEST_GROUP(Test)
+TEST_GROUP(I2CHelper)
 {
     void setup()
     {
-      Test_Create();
+      I2CHelper_Create();
     }
 
     void teardown()
     {
-       Test_Destroy();
+       I2CHelper_Destroy();
     }
 };
 
-TEST(Test, Create)
+TEST(I2CHelper, Create)
 {
   FAIL("Start here");
 }

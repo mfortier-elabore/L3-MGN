@@ -8,6 +8,11 @@
 
 #include "CFH.h"
 
+#ifdef XC8_TOOLCHAIN
+#else // Définitions pour les tests unitaires
+uint8_t fakeMem[16];
+#endif
+
 // objet temps
 struct tm maintenant;
 uint32_t maintenant_epoch;
@@ -117,7 +122,7 @@ void pollingCartouche(void) {
  */
 void getCartoucheInstallee(uint8_t * cartouche) {
     for (uint8_t i = 0; i < 8; ++i) {
-        cartouche[i] = DATAEE_ReadByte(MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL + i);
+        cartouche[i] = EEPROM_Read(MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL + i);
     }
 }
 
@@ -130,7 +135,7 @@ void setCartoucheInstallee(uint8_t * pCartouche) {
     // Écriture des 8 bytes de l'adresse
     for (uint8_t i = 0; i < 8; ++i) {
         byte = pCartouche[i];
-        DATAEE_WriteByte(MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL + i, byte);
+        EEPROM_Write(MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL + i, byte);
     }
 }
 

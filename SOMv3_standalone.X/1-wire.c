@@ -9,6 +9,12 @@
 
 #include "1-wire.h"
 
+#ifdef XC8_TOOLCHAIN
+#else
+uint8_t fake1wPinValue = 0;
+uint8_t fake1wPinDirection = 0;
+#endif
+
 const uint8_t OW_CRC_TABLE[] = {
     0, 94, 188, 226, 97, 63, 221, 131, 194, 156, 126, 32, 163, 253, 31, 65,
     157, 195, 33, 127, 252, 162, 64, 30, 95, 1, 227, 189, 62, 96, 130, 220,

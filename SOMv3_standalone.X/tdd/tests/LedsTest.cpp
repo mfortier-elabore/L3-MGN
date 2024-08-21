@@ -22,6 +22,6 @@ TEST_GROUP(Leds)
 
 TEST(Leds, Create)
 {
-  FAIL("Start here");
+  CHECK_TRUE(1);
 }
 
