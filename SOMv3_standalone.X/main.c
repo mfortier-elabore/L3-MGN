@@ -40,13 +40,16 @@ int main(void)
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts 
     // Use the following macros to: 
+    
+    // Enable the Global Interrupts
+    INTERRUPT_GlobalInterruptEnable();
 
-    // Enable the Global Interrupts 
-    INTERRUPT_GlobalInterruptEnable(); 
+    // Enable the Peripheral Interrupts
+    //INTERRUPT_PeripheralInterruptEnable();
 
-    // Disable the Global Interrupts 
-    INTERRUPT_GlobalInterruptDisable(); 
-
+    TMR0_OverflowCallbackRegister(TMR0_2s_ISR);
+    TMR2_OverflowCallbackRegister(gestionLED);
+    
     while (1) {
         //MCP7941X_runTests();
 

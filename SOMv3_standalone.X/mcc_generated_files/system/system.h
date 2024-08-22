@@ -43,6 +43,8 @@
 #include "../clkref/clkref.h"
 #include "../i2c_host/i2c1.h"
 #include "../nvm/nvm.h"
+#include "../timer/tmr0.h"
+#include "../timer/tmr2.h"
 #include "../uart/uart1.h"
 #include "../system/interrupt.h"
 #include "../system/clock.h"

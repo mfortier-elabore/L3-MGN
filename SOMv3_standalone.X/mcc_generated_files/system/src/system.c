@@ -45,6 +45,8 @@ void SYSTEM_Initialize(void)
     CLKREF_Initialize();
     I2C1_Host_Initialize();
     NVM_Initialize();
+    Timer0_Initialize();
+    TMR2_Initialize();
     UART1_Initialize();
     INTERRUPT_Initialize();
 }

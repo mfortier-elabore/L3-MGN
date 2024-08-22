@@ -96,6 +96,14 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         I2C1_TX_ISR();
     }
+    else if(PIE3bits.TMR0IE == 1 && PIR3bits.TMR0IF == 1)
+    {
+        Timer0_OverflowISR();
+    }
+    else if(PIE3bits.TMR2IE == 1 && PIR3bits.TMR2IF == 1)
+    {
+        TMR2_ISR();
+    }
     else
     {
         //Unhandled Interrupt
