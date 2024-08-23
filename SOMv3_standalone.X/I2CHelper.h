@@ -11,12 +11,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifdef XC8_TOOLCHAIN
+#ifndef TDD_SIM
 #include "mcc_generated_files/i2c_host/i2c_host_interface.h"
 #include "mcc_generated_files/system/system.h"
 #else
 #include <string.h>
-extern uint8_t fakeI2CDevices[0xFF][0xFF];
+extern uint8_t fakeI2CDevices[0x02][0xFF];
 extern uint8_t selectedFakeI2CDevice;
 extern uint8_t selectedFakeI2CDeviceRegister;
 extern uint8_t statut;

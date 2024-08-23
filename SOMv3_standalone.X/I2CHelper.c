@@ -1,8 +1,7 @@
 #include "I2CHelper.h"
 
-#ifdef XC8_TOOLCHAIN
-#else
-uint8_t fakeI2CDevices[0xFF][0xFF];
+#ifdef TDD_SIM
+uint8_t fakeI2CDevices[0x02][0xFF];
 uint8_t selectedFakeI2CDevice = 0;
 uint8_t selectedFakeI2CDeviceRegister = 0;
 

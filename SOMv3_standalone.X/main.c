@@ -25,27 +25,26 @@
     TOTAL LIABILITY ON ALL CLAIMS RELATED TO THE SOFTWARE WILL NOT 
     EXCEED AMOUNT OF FEES, IF ANY, YOU PAID DIRECTLY TO MICROCHIP FOR 
     THIS SOFTWARE.
-*/
+ */
 #ifdef XC8_TOOLCHAIN
 #include "mcc_generated_files/system/system.h"
 #include "CFH.h"
 #endif
 
-#ifdef TDD
-#include "tdd/unity/unity.h"
+#ifdef TDD_SIM
+#include "tdd/AllTests.h"
 #endif
 
 /*
     Main application
-*/
+ */
 
-int main(void)
-{
+int main(void) {
     SYSTEM_Initialize();
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts 
     // Use the following macros to: 
-    
+
     // Enable the Global Interrupts
     INTERRUPT_GlobalInterruptEnable();
 
@@ -54,11 +53,16 @@ int main(void)
 
     TMR0_OverflowCallbackRegister(TMR0_2s_ISR);
     TMR2_OverflowCallbackRegister(gestionLED);
-    
-#ifdef TDD
-    RunTests();
+
+#ifdef TDD_SIM
+
+    RunAllTests();
+
+    while (1) {
+        CLRWDT();
+    }
 #endif
-    
+
     while (1) {
         //MCP7941X_runTests();
 

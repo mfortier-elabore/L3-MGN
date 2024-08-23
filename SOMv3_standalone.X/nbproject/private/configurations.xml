@@ -22,7 +22,7 @@
       </runprofile>
     </conf>
     <conf name="tdd" type="2">
-      <platformToolSN>noToolString</platformToolSN>
+      <platformToolSN></platformToolSN>
       <languageToolchainDir>/opt/microchip/xc8/v2.46/bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>

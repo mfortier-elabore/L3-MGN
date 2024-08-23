@@ -1,51 +1,39 @@
-extern "C" {
-#include "../../I2CHelper.h"
-#include "../../MCP7941X.h"    
+#include "AllTests.h"
+#include "../I2CHelper.h"
+
+/*void setUp(void) {
+    // set stuff up here
 }
 
-#include "CppUTest/TestHarness.h"
-#include <stdio.h>
+void tearDown(void) {
+    // clean stuff up here
+}*/
 
-TEST_GROUP(I2CHelper) {
-    /*
-    void setup()
-    {
-      I2CHelper_Create();
-    }
-
-    void teardown()
-    {
-       I2CHelper_Destroy();
-    }
-     */
-
-};
-
-TEST(I2CHelper, I2CCorrectlyWritesDataToRegisterAddress) {
+void I2CHelper_I2CCorrectlyWritesDataToRegisterAddress(void) {
     uint8_t deviceAddress = 0x01;
     uint8_t registerAddress = 0x02;
     uint8_t data = 0xAA;
 
     I2CHelper_WriteRegister(deviceAddress, registerAddress, &data);
 
-    CHECK_EQUAL(fakeI2CDevices[deviceAddress][registerAddress], data);
+    TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress], data);
 }
 
-TEST(I2CHelper, I2CCorrectlyReadsDataFromRegisterAddress) {
+void I2CHelper_I2CCorrectlyReadsDataFromRegisterAddress(void) {
     uint8_t deviceAddress = 0x01;
     uint8_t registerAddress = 0x02;
     uint8_t data;
 
     I2CHelper_ReadRegister(deviceAddress, registerAddress, &data);
 
-    CHECK_EQUAL(fakeI2CDevices[deviceAddress][registerAddress], data);
+    TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress], data);
 }
 
-TEST(I2CHelper, I2CCorrectlyReadsDataFromMultipleRegisters) {
+void I2CHelper_I2CCorrectlyReadsDataFromMultipleRegisters(void) {
     uint8_t deviceAddress = 0x01;
     uint8_t registerAddress = 0x02;
     uint8_t length = 8;
-    uint8_t data[length];
+    uint8_t data[8];
     
     /*for(int i=0; i<0xF; ++i) {
         for(int j=0; j<0xF; ++j) {
@@ -59,17 +47,17 @@ TEST(I2CHelper, I2CCorrectlyReadsDataFromMultipleRegisters) {
     I2CHelper_ReadMultipleRegisters(deviceAddress, registerAddress, &data[0], length);
     
     for(int i=0; i<length; ++i) {
-        CHECK_EQUAL(fakeI2CDevices[deviceAddress][registerAddress+i], data[i]);
+        TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress+i], data[i]);
     }
 }
 
-TEST(I2CHelper, I2CCorrectlyWritesDataToMultipleRegisters) {
-    uint8_t deviceAddress = MCP7941X_EE_ADDR;
-    uint8_t registerAddress = EUI64_NODE_ADDRESS;
+void I2CHelper_I2CCorrectlyWritesDataToMultipleRegisters(void) {
+    uint8_t deviceAddress = 0x02;
+    uint8_t registerAddress = 0x03;
     uint8_t length = 8;
-    uint8_t data[length] = { 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55 };
+    uint8_t data[] = { 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55 };
     
-    for(int i=0; i<0xFF; ++i) {
+    for(int i=0; i<0x02; ++i) {
         for(int j=0; j<0xFF; ++j) {
             fakeI2CDevices[i][j] = 0;
         };
@@ -88,6 +76,13 @@ TEST(I2CHelper, I2CCorrectlyWritesDataToMultipleRegisters) {
     }
     */
     for(int j=0; j<length; j++) {
-        CHECK_EQUAL(fakeI2CDevices[deviceAddress][registerAddress+j], data[j]);
+        TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress+j], data[j]);
     }
+}
+
+void RUN_I2CHELPER_TESTS(void) {
+    RUN_TEST(I2CHelper_I2CCorrectlyWritesDataToRegisterAddress);
+    RUN_TEST(I2CHelper_I2CCorrectlyReadsDataFromRegisterAddress);
+    RUN_TEST(I2CHelper_I2CCorrectlyReadsDataFromMultipleRegisters);
+    RUN_TEST(I2CHelper_I2CCorrectlyWritesDataToMultipleRegisters);
 }
