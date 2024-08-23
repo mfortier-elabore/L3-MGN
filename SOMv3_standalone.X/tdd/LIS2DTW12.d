@@ -1,0 +1,12 @@
+objs/..//LIS2DTW12.o: ..//LIS2DTW12.c \
+ /home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/cpputest/include/CppUTest/MemoryLeakDetectorMallocMacros.h \
+ /home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/cpputest/include/CppUTest/CppUTestConfig.h \
+ /home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/cpputest/include/CppUTest/CppUTestGeneratedConfig.h \
+ /home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/cpputest/include/CppUTest/StandardCLibrary.h \
+ ..//LIS2DTW12.h ..//I2CHelper.h
+/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/cpputest/include/CppUTest/MemoryLeakDetectorMallocMacros.h:
+/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/cpputest/include/CppUTest/CppUTestConfig.h:
+/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/cpputest/include/CppUTest/CppUTestGeneratedConfig.h:
+/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/cpputest/include/CppUTest/StandardCLibrary.h:
+..//LIS2DTW12.h:
+..//I2CHelper.h:
