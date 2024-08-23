@@ -21,6 +21,9 @@
 #define LIS2DTW12_CTRL5         0x24    // Registres de controle
 #define LIS2DTW12_CTRL6         0x25    // Registres de controle
 
+#define LIS2DTW12_CTRL6         0x25    // Registres de controle
+
+
 #ifdef XC8_TOOLCHAIN
 #include <xc.h>
 #include <stdint.h>

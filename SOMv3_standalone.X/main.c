@@ -29,6 +29,11 @@
 #ifdef XC8_TOOLCHAIN
 #include "mcc_generated_files/system/system.h"
 #include "CFH.h"
+#endif
+
+#ifdef TDD
+#include "tdd/unity/unity.h"
+#endif
 
 /*
     Main application
@@ -50,6 +55,10 @@ int main(void)
     TMR0_OverflowCallbackRegister(TMR0_2s_ISR);
     TMR2_OverflowCallbackRegister(gestionLED);
     
+#ifdef TDD
+    RunTests();
+#endif
+    
     while (1) {
         //MCP7941X_runTests();
 
@@ -61,4 +70,3 @@ int main(void)
         CLRWDT();
     }
 }
-#endif
