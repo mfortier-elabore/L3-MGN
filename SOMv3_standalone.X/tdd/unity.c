@@ -1,3 +1,5 @@
+#ifdef TDD_SIM
+
 /* =========================================================================
     Unity - A Test Framework for C
     ThrowTheSwitch.org
@@ -2499,3 +2501,4 @@ int UnityTestMatches(void)
 
 #endif /* UNITY_USE_COMMAND_LINE_ARGS */
 /*-----------------------------------------------*/
+#endif

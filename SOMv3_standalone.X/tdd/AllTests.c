@@ -1,3 +1,5 @@
+#ifdef TDD_SIM
+
 #include "AllTests.h"
 
 int RunAllTests(void) {
@@ -10,3 +12,5 @@ int RunAllTests(void) {
     
     return UNITY_END();
 }
+
+#endif

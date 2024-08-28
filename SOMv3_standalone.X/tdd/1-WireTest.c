@@ -1,3 +1,5 @@
+#ifdef TDD_SIM
+
 #include "AllTests.h"
 #include "../1-wire.h"
 
@@ -51,3 +53,5 @@ void RUN_1WIRE_TESTS(void) {
     RUN_TEST(OneWire_doCRCFailsIfWrong);
     RUN_TEST(OneWire_doCRCSucceedsIfGood);
 }
+
+#endif

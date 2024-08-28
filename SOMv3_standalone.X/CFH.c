@@ -121,7 +121,7 @@ void pollingCartouche(void) {
  * @param cartouche variable qui contiendra le ROM de la cartouche en cours
  */
 void getCartoucheInstallee(uint8_t * cartouche) {
-    for (uint8_t i = 0; i < 8; ++i) {
+    for (uint24_t i = 0; i < 8; ++i) {
         cartouche[i] = EEPROM_Read(MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL + i);
     }
 }
@@ -133,7 +133,7 @@ void getCartoucheInstallee(uint8_t * cartouche) {
 void setCartoucheInstallee(uint8_t * pCartouche) {
     uint8_t byte;
     // Écriture des 8 bytes de l'adresse
-    for (uint8_t i = 0; i < 8; ++i) {
+    for (uint24_t i = 0; i < 8; ++i) {
         byte = pCartouche[i];
         EEPROM_Write(MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL + i, byte);
     }
@@ -183,7 +183,6 @@ void executerCartoucheROM(uint8_t * nouvelleCartouche) {
     if (!cartoucheDejaInstallee(nouvelleCartouche)) {
         // Sauvegarde locale du serial de la nouvelle cartouche
         setCartoucheInstallee(nouvelleCartouche);
-        setEtatLED(etat_erreur);
 
         // Écriture initiale des paramètres dans la nouvelle cartouche
         ecrireNouvelleCartouche();

@@ -121,8 +121,8 @@ void UART1_Initialize(void)
     U1CON0 = 0xB0; 
     //SENDB disabled; BRKOVR disabled; RXBIMD Set RXBKIF on rising RX input; WUE disabled; ON enabled; 
     U1CON1 = 0x80; 
-    //FLO off; TXPOL not inverted; C0EN Add all TX and RX characters; STP Transmit 1Stop bit, receiver verifies first Stop bit; RXPOL not inverted; RUNOVF RX input shifter stops all activity; 
-    U1CON2 = 0x8; 
+    //FLO Hardware flow control; TXPOL not inverted; C0EN Add all TX and RX characters; STP Transmit 1Stop bit, receiver verifies first Stop bit; RXPOL not inverted; RUNOVF RX input shifter stops all activity; 
+    U1CON2 = 0xA; 
     //BRGL 130; 
     U1BRGL = 0x82; 
     //BRGH 6; 

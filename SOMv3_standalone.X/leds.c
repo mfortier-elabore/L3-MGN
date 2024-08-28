@@ -22,11 +22,9 @@ uint8_t nbTick50ms = 0; // Nombre de 50ms
  * @param etat Nouvel état de la led
  */
 void setEtatLED(enum etatSortie_t etat) {
-    if (etat_LED != etat_erreur && etat_LED != etat_configuration) {
-        if (etat_LED != etat) {
-            nbTick50ms = 0;
-            etat_LED = etat;
-        }
+    if (etat_LED != etat) {
+        nbTick50ms = 0;
+        etat_LED = etat;
     }
 }
 

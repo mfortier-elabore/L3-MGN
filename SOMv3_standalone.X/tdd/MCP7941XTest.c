@@ -1,3 +1,5 @@
+#ifdef TDD_SIM
+
 #include "AllTests.h"
 #include "../MCP7941X.h"
 
@@ -106,3 +108,5 @@ void RUN_MCP7941X_TESTS(void) {
     RUN_TEST(MCP7941X_getIdBaseWorks);
     RUN_TEST(MCP7941X_GetAndSetTimeWorks);
 }
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef TDD_SIM
+
 #include "AllTests.h"
 #include "../I2CHelper.h"
 
@@ -86,3 +88,5 @@ void RUN_I2CHELPER_TESTS(void) {
     RUN_TEST(I2CHelper_I2CCorrectlyReadsDataFromMultipleRegisters);
     RUN_TEST(I2CHelper_I2CCorrectlyWritesDataToMultipleRegisters);
 }
+
+#endif

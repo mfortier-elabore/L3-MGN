@@ -45,8 +45,14 @@ int main(void) {
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts 
     // Use the following macros to: 
 
+    // Ajout pour pin CTS, mappee a une entree non implmentee = RD0
+    U1CTSPPS = 0x18;
+
     // Enable the Global Interrupts
     INTERRUPT_GlobalInterruptEnable();
+
+    // Deverouille de EEPROM
+    NVM_UnlockKeySet(UNLOCK_KEY);
 
     // Enable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptEnable();

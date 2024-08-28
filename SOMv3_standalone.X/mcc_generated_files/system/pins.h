@@ -89,26 +89,6 @@
 #define IO_SDA_SetAnalogMode()      do { ANSELBbits.ANSELB4 = 1; } while(0)
 #define IO_SDA_SetDigitalMode()     do { ANSELBbits.ANSELB4 = 0; } while(0)
 
-// get/set RB5 aliases
-#define IO_RX_TRIS                 TRISBbits.TRISB5
-#define IO_RX_LAT                  LATBbits.LATB5
-#define IO_RX_PORT                 PORTBbits.RB5
-#define IO_RX_WPU                  WPUBbits.WPUB5
-#define IO_RX_OD                   ODCONBbits.ODCB5
-#define IO_RX_ANS                  ANSELBbits.ANSELB5
-#define IO_RX_SetHigh()            do { LATBbits.LATB5 = 1; } while(0)
-#define IO_RX_SetLow()             do { LATBbits.LATB5 = 0; } while(0)
-#define IO_RX_Toggle()             do { LATBbits.LATB5 = ~LATBbits.LATB5; } while(0)
-#define IO_RX_GetValue()           PORTBbits.RB5
-#define IO_RX_SetDigitalInput()    do { TRISBbits.TRISB5 = 1; } while(0)
-#define IO_RX_SetDigitalOutput()   do { TRISBbits.TRISB5 = 0; } while(0)
-#define IO_RX_SetPullup()          do { WPUBbits.WPUB5 = 1; } while(0)
-#define IO_RX_ResetPullup()        do { WPUBbits.WPUB5 = 0; } while(0)
-#define IO_RX_SetPushPull()        do { ODCONBbits.ODCB5 = 0; } while(0)
-#define IO_RX_SetOpenDrain()       do { ODCONBbits.ODCB5 = 1; } while(0)
-#define IO_RX_SetAnalogMode()      do { ANSELBbits.ANSELB5 = 1; } while(0)
-#define IO_RX_SetDigitalMode()     do { ANSELBbits.ANSELB5 = 0; } while(0)
-
 // get/set RB6 aliases
 #define IO_SCL_TRIS                 TRISBbits.TRISB6
 #define IO_SCL_LAT                  LATBbits.LATB6
@@ -168,6 +148,46 @@
 #define IO_LED_SetOpenDrain()       do { ODCONCbits.ODCC0 = 1; } while(0)
 #define IO_LED_SetAnalogMode()      do { ANSELCbits.ANSELC0 = 1; } while(0)
 #define IO_LED_SetDigitalMode()     do { ANSELCbits.ANSELC0 = 0; } while(0)
+
+// get/set RC6 aliases
+#define IO_RX_TRIS                 TRISCbits.TRISC6
+#define IO_RX_LAT                  LATCbits.LATC6
+#define IO_RX_PORT                 PORTCbits.RC6
+#define IO_RX_WPU                  WPUCbits.WPUC6
+#define IO_RX_OD                   ODCONCbits.ODCC6
+#define IO_RX_ANS                  ANSELCbits.ANSELC6
+#define IO_RX_SetHigh()            do { LATCbits.LATC6 = 1; } while(0)
+#define IO_RX_SetLow()             do { LATCbits.LATC6 = 0; } while(0)
+#define IO_RX_Toggle()             do { LATCbits.LATC6 = ~LATCbits.LATC6; } while(0)
+#define IO_RX_GetValue()           PORTCbits.RC6
+#define IO_RX_SetDigitalInput()    do { TRISCbits.TRISC6 = 1; } while(0)
+#define IO_RX_SetDigitalOutput()   do { TRISCbits.TRISC6 = 0; } while(0)
+#define IO_RX_SetPullup()          do { WPUCbits.WPUC6 = 1; } while(0)
+#define IO_RX_ResetPullup()        do { WPUCbits.WPUC6 = 0; } while(0)
+#define IO_RX_SetPushPull()        do { ODCONCbits.ODCC6 = 0; } while(0)
+#define IO_RX_SetOpenDrain()       do { ODCONCbits.ODCC6 = 1; } while(0)
+#define IO_RX_SetAnalogMode()      do { ANSELCbits.ANSELC6 = 1; } while(0)
+#define IO_RX_SetDigitalMode()     do { ANSELCbits.ANSELC6 = 0; } while(0)
+
+// get/set RC7 aliases
+#define IO_TXDE_TRIS                 TRISCbits.TRISC7
+#define IO_TXDE_LAT                  LATCbits.LATC7
+#define IO_TXDE_PORT                 PORTCbits.RC7
+#define IO_TXDE_WPU                  WPUCbits.WPUC7
+#define IO_TXDE_OD                   ODCONCbits.ODCC7
+#define IO_TXDE_ANS                  ANSELCbits.ANSELC7
+#define IO_TXDE_SetHigh()            do { LATCbits.LATC7 = 1; } while(0)
+#define IO_TXDE_SetLow()             do { LATCbits.LATC7 = 0; } while(0)
+#define IO_TXDE_Toggle()             do { LATCbits.LATC7 = ~LATCbits.LATC7; } while(0)
+#define IO_TXDE_GetValue()           PORTCbits.RC7
+#define IO_TXDE_SetDigitalInput()    do { TRISCbits.TRISC7 = 1; } while(0)
+#define IO_TXDE_SetDigitalOutput()   do { TRISCbits.TRISC7 = 0; } while(0)
+#define IO_TXDE_SetPullup()          do { WPUCbits.WPUC7 = 1; } while(0)
+#define IO_TXDE_ResetPullup()        do { WPUCbits.WPUC7 = 0; } while(0)
+#define IO_TXDE_SetPushPull()        do { ODCONCbits.ODCC7 = 0; } while(0)
+#define IO_TXDE_SetOpenDrain()       do { ODCONCbits.ODCC7 = 1; } while(0)
+#define IO_TXDE_SetAnalogMode()      do { ANSELCbits.ANSELC7 = 1; } while(0)
+#define IO_TXDE_SetDigitalMode()     do { ANSELCbits.ANSELC7 = 0; } while(0)
 
 /**
  * @ingroup  pinsdriver

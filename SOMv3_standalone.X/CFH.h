@@ -36,8 +36,8 @@ extern uint8_t fakeMem[16];
 #define SOFTWARE_REVISION			0x11  // était 0x10
 
 // Adresses eeprom local
-#define MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL	0x0000
-#define MEMORY_ADDRESS_BASE_SERIAL              0x0008
+#define MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL	(0x380000U)
+#define MEMORY_ADDRESS_BASE_SERIAL              (0x380008U)
 
 // Adresses dans le iButton
 #define CARTRIDGE_ADDRESS_MODE						0x0000	///> Define what to do with this iButton (configuration or not)

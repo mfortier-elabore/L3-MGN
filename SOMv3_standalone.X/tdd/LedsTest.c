@@ -1,3 +1,5 @@
+#ifdef TDD_SIM
+
 #include "AllTests.h"
 #include "../leds.h"
 
@@ -21,3 +23,5 @@ void RUN_LED_TESTS(void) {
     RUN_TEST(test_function_should_doBlahAndBlah);
     RUN_TEST(test_function_should_doAlsoDoBlah);
 }
+
+#endif
