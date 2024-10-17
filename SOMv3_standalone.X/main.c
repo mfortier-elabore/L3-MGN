@@ -54,9 +54,6 @@ int main(void) {
     // Deverouille de EEPROM
     NVM_UnlockKeySet(UNLOCK_KEY);
 
-    // Enable the Peripheral Interrupts
-    //INTERRUPT_PeripheralInterruptEnable();
-
     TMR0_OverflowCallbackRegister(TMR0_2s_ISR);
     TMR2_OverflowCallbackRegister(gestionLED);
 
@@ -68,6 +65,8 @@ int main(void) {
         CLRWDT();
     }
 #endif
+    
+    printf("\n================ Demarrage\n");
 
     while (1) {
         //MCP7941X_runTests();

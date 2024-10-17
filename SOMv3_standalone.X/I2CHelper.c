@@ -62,20 +62,20 @@ void I2CHelper_Destroy(void) {
 }
 #endif
 
-void I2CHelper_WriteRegister(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data) {
-    I2C1_Host.Write(deviceAddress, &registerAddress, 1);
+void I2CHelper_WriteRegister(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data) {
+    I2C1_Host.Write(deviceAddress, registerAddress, 1);
     I2C1_Host.Write(deviceAddress, data, 1);
 }
 
-void I2CHelper_ReadRegister(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data) {
-    I2C1_Host.WriteRead(deviceAddress, &registerAddress, 1, data, 1);
+void I2CHelper_ReadRegister(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data) {
+    I2C1_Host.WriteRead(deviceAddress, registerAddress, 1, data, 1);
 }
 
-void I2CHelper_ReadMultipleRegisters(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data, size_t length) {
-    I2C1_Host.WriteRead(deviceAddress, &registerAddress, 1, data, length);
+void I2CHelper_ReadMultipleRegisters(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data, size_t length) {
+    I2C1_Host.WriteRead(deviceAddress, registerAddress, 1, data, length);
 }
 
-void I2CHelper_WriteMultipleRegisters(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data, size_t length) {
-    I2C1_Host.Write(deviceAddress, &registerAddress, 1);
+void I2CHelper_WriteMultipleRegisters(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data, size_t length) {
+    I2C1_Host.Write(deviceAddress, registerAddress, 1);
     I2C1_Host.Write(deviceAddress, data, length);
 }

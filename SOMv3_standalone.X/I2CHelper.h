@@ -23,10 +23,10 @@ extern uint8_t statut;
 #endif
 
 
-void I2CHelper_WriteRegister(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data);
-void I2CHelper_ReadRegister(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data);
-void I2CHelper_ReadMultipleRegisters(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data, size_t length);
-void I2CHelper_WriteMultipleRegisters(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data, size_t length);
+void I2CHelper_WriteRegister(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data);
+void I2CHelper_ReadRegister(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data);
+void I2CHelper_ReadMultipleRegisters(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data, size_t length);
+void I2CHelper_WriteMultipleRegisters(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data, size_t length);
 
 
 #endif  /* D_FakeI2CHelper_H */

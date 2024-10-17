@@ -51,6 +51,7 @@ void pollingCartouche(void) {
 
     // Effectue la mise à jour demandée au passage précédent
     if (attenteUpdateRTC) {
+        printf("Ajustement du temps.\n");
         MCP7941X_setTime(&maintenant);
         attenteUpdateRTC = false;
         setEtatLED(etat_configDone);
@@ -62,6 +63,7 @@ void pollingCartouche(void) {
     // Lecture du temps en prévision de l'écriture dans le iButton
     MCP7941X_getTime(&maintenant);
     maintenant_epoch = (uint32_t) mktime(&maintenant);
+    printf("Temps actuel : %lu\n", maintenant_epoch);
 
     // Détection de la cartouche et lecture du ROM
     uint8_t test = ow_reset();
@@ -228,7 +230,7 @@ bool ecrireDateRetrait(uint8_t *p_pCartridge) {
     //------------------------------------
     // Premier bloc :
     // - Writes count (4 bytes)
-    // - Date removes (4 bytes)
+    // - Date removed (4 bytes)
 
     // Lecture et incrémentation du nombre actuel d'écritures, 
     // à placer dans le buffer [0:3]

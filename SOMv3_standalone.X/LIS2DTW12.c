@@ -3,7 +3,7 @@
 void LIS2DTW12_Create(void)
 {
     // Configuration de l'accelerometre
-    I2CHelper_WriteRegister(LIS2DTW12_ADDR, LIS2DTW12_CTRL1, 0x00);
+    I2CHelper_WriteRegister(LIS2DTW12_ADDR, &LIS2DTW12_CTRL1, 0x00);
     
     /*
      Option 1 : on-demand. Ecrit 1 dans SLP_MODE, puis il y a un interrupt (INT1)

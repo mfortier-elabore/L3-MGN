@@ -2,22 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/MCP7941X.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/I2CHelper.h</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/tdd/unity_internals.h</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/1-wire.h</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/mcc_generated_files/system/pins.h</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/tdd/1-WireTest.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/I2CHelper.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/tdd/LedsTest.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/main.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/tdd/I2CHelperTest.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/tdd/AllTests.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/tdd/MCP7941XTest.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/tdd/AllTests.h</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/1-wire.c</file>
-            <file>file:/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/MCP7941X.h</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

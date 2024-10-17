@@ -13,16 +13,15 @@
 
 // Accelerometer chip address
 #define LIS2DTW12_ADDR          0x19    // 001100x | 1 -> 0x19
-#define LIS2DTW12_WHO_AM_I      0x0F    // Registre WHOAMI, retourne 01000100 -> 0x44
-#define LIS2DTW12_CTRL1         0x20    // Registres de controle
-#define LIS2DTW12_CTRL2         0x21    // Registres de controle
-#define LIS2DTW12_CTRL3         0x22    // Registres de controle
-#define LIS2DTW12_CTRL4         0x23    // Registres de controle
-#define LIS2DTW12_CTRL5         0x24    // Registres de controle
-#define LIS2DTW12_CTRL6         0x25    // Registres de controle
 
-#define LIS2DTW12_CTRL6         0x25    // Registres de controle
-
+// Registres
+const uint8_t LIS2DTW12_WHO_AM_I = 0x0F; // Registre WHOAMI, retourne 01000100 -> 0x44
+const uint8_t LIS2DTW12_CTRL1 = 0x20; // Registres de controle
+const uint8_t LIS2DTW12_CTRL2 = 0x21; // Registres de controle
+const uint8_t LIS2DTW12_CTRL3 = 0x22; // Registres de controle
+const uint8_t LIS2DTW12_CTRL4 = 0x23; // Registres de controle
+const uint8_t LIS2DTW12_CTRL5 = 0x24; // Registres de controle
+const uint8_t LIS2DTW12_CTRL6 = 0x25; // Registres de controle
 
 #ifdef XC8_TOOLCHAIN
 #include <xc.h>

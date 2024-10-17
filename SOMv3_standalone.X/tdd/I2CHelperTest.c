@@ -16,7 +16,7 @@ void I2CHelper_I2CCorrectlyWritesDataToRegisterAddress(void) {
     uint8_t registerAddress = 0x02;
     uint8_t data = 0xAA;
 
-    I2CHelper_WriteRegister(deviceAddress, registerAddress, &data);
+    I2CHelper_WriteRegister(deviceAddress, &registerAddress, &data);
 
     TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress], data);
 }
@@ -45,8 +45,8 @@ void I2CHelper_I2CCorrectlyReadsDataFromMultipleRegisters(void) {
     
     uint8_t writedata=0x55;
     
-    I2CHelper_WriteRegister(deviceAddress, registerAddress, &writedata);
-    I2CHelper_ReadMultipleRegisters(deviceAddress, registerAddress, &data[0], length);
+    I2CHelper_WriteRegister(deviceAddress, &registerAddress, &writedata);
+    I2CHelper_ReadMultipleRegisters(deviceAddress, &registerAddress, &data[0], length);
     
     for(int i=0; i<length; ++i) {
         TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress+i], data[i]);
