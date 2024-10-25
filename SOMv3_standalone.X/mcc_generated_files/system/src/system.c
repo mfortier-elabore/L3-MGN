@@ -48,6 +48,8 @@ void SYSTEM_Initialize(void)
     Timer0_Initialize();
     TMR2_Initialize();
     UART1_Initialize();
+    UART2_Initialize();
+    UART3_Initialize();
     INTERRUPT_Initialize();
 }
 

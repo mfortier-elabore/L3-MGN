@@ -296,10 +296,12 @@ void I2C1_ERROR_ISR()
 void I2C1_RX_ISR()
 {
     *i2c1Status.readPtr++ = I2C1_DataReceive();
+    //printf("R %x\n", *(i2c1Status.readPtr-1));
 }
 
 void I2C1_TX_ISR()
 {
+    //printf("W %x\n", *i2c1Status.writePtr);
     I2C1_DataTransmit(*i2c1Status.writePtr++);
 }
 
@@ -329,6 +331,7 @@ static void I2C1_WriteStart(void)
     }
 
     I2C1_AddrTransmit((uint8_t) (i2c1Status.address << 1));
+    //printf("A : %x\n", i2c1Status.address);
     I2C1_StartSend();
 }
 

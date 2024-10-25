@@ -14,15 +14,14 @@
 #include <time.h>
 #include <stdint.h>
 
-#ifdef XC8_TOOLCHAIN
-#include <xc.h>
-#include "mcc_generated_files/system/system.h"
-#else // Définitions pour les tests unitaires
+#ifdef TDD_SOFTWARE
 extern uint8_t fakeMem[16];
 #define DATAEE_WriteByte(x, y)	do { fakeMem[x] = y; } while(0);
 #define DATAEE_ReadByte(x)	fakeMem[x];
+#else // Définitions pour les tests unitaires
+#include <xc.h>
+#include "mcc_generated_files/system/system.h"
 #endif
-
 
 #include "1-wire.h"
 #include "MCP7941X.h"
@@ -38,6 +37,9 @@ extern uint8_t fakeMem[16];
 // Adresses eeprom local
 #define MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL	(0x380000U)
 #define MEMORY_ADDRESS_BASE_SERIAL              (0x380008U)
+const uint32_t MEMORY_ADDRESS_RUNNING_HOURS_LOWACCEL = 0x380010U;
+const uint32_t MEMORY_ADDRESS_RUNNING_HOURS_HIGHACCEL = 0x380018U;
+const uint32_t MEMORY_ADDRESS_RUNNING_HOURS_DIGITALIN = 0x380020U;
 
 // Adresses dans le iButton
 #define CARTRIDGE_ADDRESS_MODE						0x0000	///> Define what to do with this iButton (configuration or not)
@@ -60,9 +62,10 @@ extern uint8_t fakeMem[16];
 #define CARTRIDGE_WRITES_COUNT_CRC                  0x0058  ///> CRC for Writes Count
 #define CARTRIDGE_ADDRESS_DATE_REMOVED_CRC          0x0059  ///> CRC for Date Removed
 
-// Inutilisés
-#define CARTRIDGE_ADDRESS_OPERATION_TIME			0x0020	///> Duration of operation of the filtration (sec)
-#define CARTRIDGE_ADDRESS_MAXIMUM_OPERATION_TIME	0x0024	///> Duration maximum of operation of the filtration (sec)
+// Running hours
+#define CARTRIDGE_RUNNING_HOURS_1			0x0020	///> Running hours (seconds) low threshold
+#define CARTRIDGE_RUNNING_HOURS_2           0x0024	///> Running hours (seconds) digital input threshold
+#define CARTRIDGE_RUNNING_HOURS_3           0x0028	///> Running hours (seconds) high threshold
 
 // Modes de cartouches. Inutilisé : toujours 0x00
 #define CARTRIDGE_MODE_CARTRIDGE					0x00

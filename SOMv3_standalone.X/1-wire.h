@@ -32,9 +32,7 @@ unsigned char OW_read_byte(void);
 
 #include "CFH.h"
 
-#ifdef XC8_TOOLCHAIN
-#include "mcc_generated_files/system/system.h"
-#else
+#ifdef TDD_SOFTWARE
 #define IO_1W_SetDigitalInput()    do { fake1wPinDirection = 1; } while(0)
 #define IO_1W_SetDigitalOutput()   do { fake1wPinDirection = 0; } while(0)
 #define IO_1W_SetHigh()            do { fake1wPinValue = 1; } while(0)
@@ -43,8 +41,12 @@ unsigned char OW_read_byte(void);
 #define __delay_us(x)              do { } while(0);
 #define __delay_ms(x)              do { } while(0);
 #define IO_1W_TRIS                 fake1wPinDirection
+#define IO_1W_LAT                  fake1wPinValue
+
 extern uint8_t fake1wPinValue;
 extern uint8_t fake1wPinDirection;
+#else
+#include "mcc_generated_files/system/system.h"
 #endif
 
 typedef struct {

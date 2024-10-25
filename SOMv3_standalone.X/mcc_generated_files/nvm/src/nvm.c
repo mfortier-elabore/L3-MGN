@@ -79,6 +79,7 @@ void NVM_UnlockKeyClear(void)
     unlockKeyLow = 0x00;
 }
 
+#ifndef TDD_SOFTWARE
 eeprom_data_t EEPROM_Read(eeprom_address_t address)
 {
     do {} while(NVM_IsBusy());
@@ -136,3 +137,4 @@ void EEPROM_Write(eeprom_address_t address, eeprom_data_t data)
     //Clear the NVM Command
     NVMCON1bits.NVMCMD = 0x00;
 }
+#endif

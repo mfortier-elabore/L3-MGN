@@ -1,4 +1,4 @@
-#ifdef TDD_SIM
+#if defined(TDD_SOFTWARE) || defined(TDD_HARDWARE)
 
 #include "AllTests.h"
 #include "../MCP7941X.h"
@@ -23,16 +23,21 @@ void MCP7941X_setIdBaseWorks(void) {
     uint8_t length = 8;
     uint8_t readData[8] = {0};
     uint8_t byte;
+    uint8_t zeros[8] = {0};
     
     // clear EEM
     for (uint8_t i = 0; i < length; ++i) {
         EEPROM_Write(MEMORY_ADDRESS_BASE_SERIAL + i, 0);
     }
+    
+    TEST_ASSERT_TRUE(!memcmp(&zeros[0], &readData[0], length));
 
+#ifdef TDD_SOFTWARE
     // ecrire adresse bidon dans le fake I2C
     uint8_t fake1WAddress[] = {0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55};
     I2CHelper_WriteMultipleRegisters(MCP7941X_EE_ADDR, EUI64_NODE_ADDRESS, &fake1WAddress[0], 8 * sizeof (uint8_t));
-
+#endif
+    
     setIdBase();
     
     for (uint8_t i = 0; i < length; ++i) {
@@ -40,7 +45,11 @@ void MCP7941X_setIdBaseWorks(void) {
         readData[i] = byte;
     }
 
+#ifdef TDD_SOFTWARE
     TEST_ASSERT_TRUE(!memcmp(&fake1WAddress[0], &readData[0], length));
+#else
+    TEST_ASSERT_FALSE(!memcmp(&zeros[0], &readData[0], length));
+#endif
 }
 
 void MCP7941X_getIdBaseWorks(void) {
@@ -105,7 +114,9 @@ void RUN_MCP7941X_TESTS(void) {
     RUN_TEST(MCP7941X_ToBCDWorks);
     RUN_TEST(MCP7941X_fromBCDWorks);
     RUN_TEST(MCP7941X_setIdBaseWorks);
+#ifdef TDD_SOFTWARE
     RUN_TEST(MCP7941X_getIdBaseWorks);
+#endif
     RUN_TEST(MCP7941X_GetAndSetTimeWorks);
 }
 

@@ -1,4 +1,4 @@
-#ifdef TDD_SIM
+#if defined(TDD_SOFTWARE) || defined(TDD_HARDWARE)
 
 /* =========================================================================
     Unity - A Test Framework for C

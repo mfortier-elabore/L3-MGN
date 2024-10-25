@@ -7,8 +7,7 @@
  */
 #include "MCP7941X.h"
 
-#ifdef XC8_TOOLCHAIN
-#else
+#ifdef TDD_SOFTWARE
 uint8_t fakeEEMem[0xFF];
 
 eeprom_data_t EEPROM_Read(eeprom_address_t address) {
@@ -93,7 +92,7 @@ void MCP7941X_getTime(struct tm * t) {
     
     I2CHelper_ReadRegister(MCP7941X_RTC_ADDR, &RTCC_HOUR, &heure_raw);
     heure_raw = heure_raw & HEURE_MASQUE;
-
+    
     // Convertir du BDC et met à jour la struct globale
     t->tm_mday = fromBCD(jour_raw);
     t->tm_mon = fromBCD(mois_raw);
@@ -101,6 +100,8 @@ void MCP7941X_getTime(struct tm * t) {
     t->tm_hour = fromBCD(heure_raw);
     t->tm_min = fromBCD(min_raw);
     t->tm_sec = fromBCD(sec_raw);
+    
+    printf("Date / Heure : %i/%i/%i %i:%i:%i\n", t->tm_mday, t->tm_mon+1, t->tm_year-100+2000, t->tm_hour-4, t->tm_min, t->tm_sec);
 }
 
 /**

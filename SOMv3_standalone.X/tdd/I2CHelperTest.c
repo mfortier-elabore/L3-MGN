@@ -1,4 +1,4 @@
-#ifdef TDD_SIM
+#if defined(TDD_SOFTWARE) || defined(TDD_HARDWARE)
 
 #include "AllTests.h"
 #include "../I2CHelper.h"
@@ -18,7 +18,7 @@ void I2CHelper_I2CCorrectlyWritesDataToRegisterAddress(void) {
 
     I2CHelper_WriteRegister(deviceAddress, &registerAddress, &data);
 
-    TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress], data);
+    TEST_ASSERT_EQUAL(data, fakeI2CDevices[deviceAddress][registerAddress]);
 }
 
 void I2CHelper_I2CCorrectlyReadsDataFromRegisterAddress(void) {
@@ -28,7 +28,7 @@ void I2CHelper_I2CCorrectlyReadsDataFromRegisterAddress(void) {
 
     I2CHelper_ReadRegister(deviceAddress, registerAddress, &data);
 
-    TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress], data);
+    TEST_ASSERT_EQUAL(data, fakeI2CDevices[deviceAddress][registerAddress]);
 }
 
 void I2CHelper_I2CCorrectlyReadsDataFromMultipleRegisters(void) {
@@ -49,7 +49,7 @@ void I2CHelper_I2CCorrectlyReadsDataFromMultipleRegisters(void) {
     I2CHelper_ReadMultipleRegisters(deviceAddress, &registerAddress, &data[0], length);
     
     for(int i=0; i<length; ++i) {
-        TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress+i], data[i]);
+        TEST_ASSERT_EQUAL(data[i], fakeI2CDevices[deviceAddress][registerAddress+i]);
     }
 }
 
@@ -78,15 +78,20 @@ void I2CHelper_I2CCorrectlyWritesDataToMultipleRegisters(void) {
     }
     */
     for(int j=0; j<length; j++) {
-        TEST_ASSERT_EQUAL(fakeI2CDevices[deviceAddress][registerAddress+j], data[j]);
+        TEST_ASSERT_EQUAL(data[j], fakeI2CDevices[deviceAddress][registerAddress+j]);
     }
 }
 
 void RUN_I2CHELPER_TESTS(void) {
+#ifdef TDD_SOFTWARE
     RUN_TEST(I2CHelper_I2CCorrectlyWritesDataToRegisterAddress);
     RUN_TEST(I2CHelper_I2CCorrectlyReadsDataFromRegisterAddress);
     RUN_TEST(I2CHelper_I2CCorrectlyReadsDataFromMultipleRegisters);
     RUN_TEST(I2CHelper_I2CCorrectlyWritesDataToMultipleRegisters);
+#else
+    // Pas de test du helper sur le matériel. Englobé dans les tests des périphériques.
+#endif
+    
 }
 
 #endif

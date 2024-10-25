@@ -14,29 +14,25 @@
 #include "CFH.h"
 #include "I2CHelper.h"
 
-#ifdef XC8_TOOLCHAIN
+#ifdef TDD_SOFTWARE
+extern uint8_t fakeEEMem[0xFF];
+typedef uint8_t eeprom_data_t;
+typedef uint8_t eeprom_address_t;
+eeprom_data_t EEPROM_Read(eeprom_address_t address);
+void EEPROM_Write(eeprom_address_t address, eeprom_data_t p_data);
+#else
 #include <xc.h>
 #include <stdint.h>
 #include <stdio.h>
-
 #include "mcc_generated_files/system/system.h"
 #include "mcc_generated_files/i2c_host/i2c_host_interface.h"
 #include "mcc_generated_files/nvm/nvm.h"
-#else
-extern uint8_t fakeEEMem[0xFF];
 
-typedef uint8_t eeprom_data_t;
-typedef uint8_t eeprom_address_t;
-
-eeprom_data_t EEPROM_Read(eeprom_address_t address);
-void EEPROM_Write(eeprom_address_t address, eeprom_data_t p_data);
 #endif
 
-
-
 // RTC chip address
-#define MCP7941X_RTC_ADDR           0x6F  // Address 1, RTC function
-#define MCP7941X_EE_ADDR            0x57  // Address 2, EEPROM functions
+const uint8_t MCP7941X_RTC_ADDR = 0x6F; // Address 1, RTC function
+const uint8_t MCP7941X_EE_ADDR = 0x57; // Address 2, EEPROM functions
 
 // RTC registers
 // Doivent etre des const uint8_t a cause de l'appel I2C

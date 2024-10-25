@@ -8,12 +8,11 @@
 
 #include "leds.h"
 
-#ifdef XC8_TOOLCHAIN
-#else
+#ifdef TDD_SOFTWARE
 uint8_t fakeLedPinValue = 0;
 #endif
 
-// deux variables globales pour la gestin des modes pour les dels
+// deux variables globales pour la gestion des modes pour les dels
 enum etatSortie_t etat_LED;
 uint8_t nbTick50ms = 0; // Nombre de 50ms
 

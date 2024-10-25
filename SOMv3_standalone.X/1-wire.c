@@ -9,8 +9,7 @@
 
 #include "1-wire.h"
 
-#ifdef XC8_TOOLCHAIN
-#else
+#ifdef TDD_SOFTWARE
 uint8_t fake1wPinValue = 0;
 uint8_t fake1wPinDirection = 0;
 #endif
@@ -244,6 +243,7 @@ bool ow_write8bytes(uint16_t p_uAddress, uint8_t * p_pData) {
 
         ++numEssai;
         if (numEssai > NB_ESSAIS_ECRITURE_MAX) {
+            printf("\tEcriture a echoue : trop d'essais.\n");
             return false;
         }
 
@@ -270,6 +270,7 @@ bool ow_write8bytes(uint16_t p_uAddress, uint8_t * p_pData) {
 
         // Vérification que l'adresse correspond
         if (uValue != p_uAddress) {
+            printf("\tEcriture a echoue : adresse ne correspond pas.\n");
             bValid = false;
         }
 
@@ -283,6 +284,7 @@ bool ow_write8bytes(uint16_t p_uAddress, uint8_t * p_pData) {
             // Ceci peut être dû à une adresse invalide ou protégée
             if (uValue != p_pData[uByte]) {
                 bValid = false;
+                printf("\tErreur : les donnees ne correspondent pas.\n");
             }
         }
 
@@ -313,9 +315,12 @@ bool ow_write8bytes(uint16_t p_uAddress, uint8_t * p_pData) {
             // (0101 0101 au lieu de 1010 1010 ?)
             if (ucResponse != 0xAA) {// || ucResponse != 0x55) {
                 bValid = false;
+                printf("\tEcriture a echoue : reponse invalide.\n");
             }
         }
     } while (!bValid);
+    
+    printf(".");
 
     return bValid;
 }

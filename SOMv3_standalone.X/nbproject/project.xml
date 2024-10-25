@@ -17,7 +17,11 @@
                     <type>2</type>
                 </confElem>
                 <confElem>
-                    <name>tdd</name>
+                    <name>tdd_software</name>
+                    <type>2</type>
+                </confElem>
+                <confElem>
+                    <name>tdd_hardware</name>
                     <type>2</type>
                 </confElem>
             </confList>
