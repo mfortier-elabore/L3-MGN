@@ -61,6 +61,7 @@ void setup() {
 }
 
 void loop() {
+  /*
   if (mgn->estConnecte()) {
     Serial.println("Connecte, envoi du message ...");
     if (mgn->sendData()) {
@@ -70,7 +71,9 @@ void loop() {
     }
   } else {
     Serial.println("Connexion...");
-  }
+  }*/
+
+  mgn->lireGPS();
 
   delay(5000);
 }

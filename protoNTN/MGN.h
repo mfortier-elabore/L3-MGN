@@ -8,7 +8,8 @@ public:
   // membres
   ATcommands* module;
 
-  char GPS_act[32];
+  float latitude;
+  float longitude;
 
   // Socket UDP
   const char SEND_NTN[41] = "AT%SOCKETDATA=\"SEND\",1,7,\"566961204e544e\"";

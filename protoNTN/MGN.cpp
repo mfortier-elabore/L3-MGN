@@ -75,6 +75,11 @@ bool MGN::closeSocket(void) {
 }
 
 bool MGN::sendData(void) {
+
+  char msg[54] = "AT%SOCKETDATA=\"SEND\",1,13,\"4D657373616765646532303042\"";
+
+  sprintf(msg, "AT%SOCKETDATA=\"SEND\",1,%i,\"4D657373616765646532303042\"", n, );
+
   if (this->openSocket()) {
     if (!module->sendCommand("AT%SOCKETDATA=\"SEND\",1,13,\"4D657373616765646532303042\"", "OK\0", 1000)) {
       return false;
@@ -91,6 +96,42 @@ void MGN::initGPS(void) {
 }
 
 void MGN::lireGPS(void) {
+  // Reponse attendue :
+  // %IGNSSINFO: 2,"21:29:14","12/11/2024","45.403975","-71.891657","40.0",1731446954000,,,"B",3
+  // OK
+  char pos[100] = "%IGNSSINFO: 2,\"21:29:14\",\"12/11/2024\",\"45.403975\",\"-71.891657\",\"40.0\",1731446954000,,,\"B\",3\x0\xd\x0\xdOK";
+  char* ptr = strstr(pos, "%IGNSSINFO:");
+
+  char * ptr_latitude = ptr + 39; // longueur 9
+  char * ptr_longitude = ptr +51; // longueur 10 (a cause du -)
+
+  char char_latitude[11] = "";
+  char char_longitude[11] = "";
+  
+  uint8_t n = 9;
+  if(ptr_latitude[0] == 0x2D) {
+    n = 10;
+  }
+
+  for(uint8_t i=0; i<n; ++i) {
+    char_latitude[i] = *(ptr_latitude+i);
+    char_longitude[i] = *(ptr_longitude+i);
+  }
+
+  n = 9;
+  if(ptr_longitude[0] == 0x2D) {
+    n = 10;
+    Serial.println("moins");
+  } else {
+    Serial.println(ptr_longitude[0]);
+  }
+
+  for(uint8_t i=0; i<n; ++i) {
+    longitude[i] = *(ptr_longitude+i);
+  }
+
+  this->latitude = atof(char_latitude);
+  this->longitude = atof(char_longitude);
 }
 
 void MGN::updateGPS(void) {
