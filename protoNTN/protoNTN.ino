@@ -7,7 +7,7 @@
  *  Last Modified: 10/20/2017
  */
 
-#include "ATcommands.h"
+#include "AT_commands.h"
 #include "MGN.h"
 //#include <SoftwareSerial.h>
 
@@ -61,8 +61,13 @@ void setup() {
 }
 
 void loop() {
-  if(mgn->estConnecte()) {
-    Serial.println("En ligne!!");
+  if (mgn->estConnecte()) {
+    Serial.println("Connecte, envoi du message ...");
+    if (mgn->sendData()) {
+      delay(60000);
+    } else {
+      Serial.println("Echec de l'envoi.");
+    }
   } else {
     Serial.println("Connexion...");
   }
