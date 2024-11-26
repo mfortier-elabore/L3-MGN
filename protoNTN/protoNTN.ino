@@ -9,26 +9,17 @@
 
 #include "AT_commands.h"
 #include "MGN.h"
-//#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 
-#define MCU_RX 9   // 3 Remember MCU RX connects to module TX and vice versa
-#define MCU_TX 10  // 2
 #define RST 4      // MCU pin to control module reset
 
-//SoftwareSerial moduleSS = SoftwareSerial(MCU_RX, MCU_TX); // MCU RX, TX
-//SoftwareSerial *moduleSerial = &moduleSS;
-
-// Hardware serial is also possible!
-HardwareSerial *moduleSerial = &Serial2;
+HardwareSerial *moduleSerial = &Serial1;
 
 ATcommands module = ATcommands(RST, true);  // Use "false" if you don't want AT commands with newline, "true" otherwise
 
 MGN *mgn;
 
 void setup() {
-
-  /*pinMode(16, INPUT_PULLUP);
-  pinMode(17, INPUT_PULLUP);*/
 
   Serial.begin(115200);
 
@@ -40,7 +31,7 @@ void setup() {
   mgn->init();
   mgn->switchToLTE();
 
-  /*// Reset module if needed. This example pulses the reset pin low for 10ms.
+  // Reset module if needed. This example pulses the reset pin low for 10ms.
   // If left out, the pulse duration is 100ms by default.
   module.reset(LOW, 10); // module.reset(HIGH/LOW, pulseDuration)
 
@@ -57,23 +48,9 @@ void setup() {
   delay(1000);
 
   // Send command with timeout and check if module's response matches the desired
-  if (!module.sendCommand("AT", "OK", 1000)) Serial.println(F("Command failed!"));*/
+  if (!module.sendCommand("AT", "OK", 1000)) Serial.println(F("Command failed!"));
 }
 
 void loop() {
-  /*
-  if (mgn->estConnecte()) {
-    Serial.println("Connecte, envoi du message ...");
-    if (mgn->sendData()) {
-      delay(60000);
-    } else {
-      Serial.println("Echec de l'envoi.");
-    }
-  } else {
-    Serial.println("Connexion...");
-  }*/
-
-  mgn->lireGPS();
-
-  delay(5000);
+  mgn->update();
 }
