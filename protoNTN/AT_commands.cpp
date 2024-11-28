@@ -60,8 +60,8 @@ bool ATcommands::sendCommand(char *command, char *expect, uint16_t timeout) {
 
   memset(&replybuffer, 0, 255);
 
-  Serial.print(F("\t---> "));
-  Serial.println(command);
+  //Serial.print(F("\t---> "));
+  //Serial.println(command);
   if (newline) mySerial->println(command);
   else mySerial->print(command);
 
@@ -81,14 +81,18 @@ bool ATcommands::sendCommand(char *command, char *expect, uint16_t timeout) {
   }
 
   if (!replyMatch) {
-    Serial.print("Echec : ");
+    Serial.print("Echec : '");
+    Serial.print(command);
+    Serial.print("' : ");
+    
     for (uint8_t i = 0; expect[i] != 0; ++i) {
       Serial.print(expect[i]);
     }
     Serial.print(" != ");
+    Serial.println(replybuffer);
   }
 
-  Serial.println(replybuffer);
+  //Serial.println(replybuffer);
 
   if (replyMatch) return true;
   else return false;
@@ -99,8 +103,8 @@ bool ATcommands::sendCommand(char *command, char *expect, char *reply, uint16_t 
 
   memset(&replybuffer, 0, 255);
 
-  Serial.print(F("\t---> "));
-  Serial.println(command);
+  //Serial.print(F("\t---> "));
+  //Serial.println(command);
   if (newline) mySerial->println(command);
   else mySerial->print(command);
 
@@ -120,14 +124,17 @@ bool ATcommands::sendCommand(char *command, char *expect, char *reply, uint16_t 
   }
 
   if (!replyMatch) {
-    Serial.print("Echec : ");
+    Serial.print("Echec : '");
+    Serial.print(command);
+    Serial.print("' : ");
+    
     for (uint8_t i = 0; expect[i] != 0; ++i) {
       Serial.print(expect[i]);
     }
     Serial.print(" != ");
+    Serial.println(replybuffer);
   }
 
-  Serial.println(replybuffer);
 
   for (uint8_t i = 0; i < idx; ++i) {
     reply[i] = replybuffer[i];

@@ -38,3 +38,11 @@ void LedManager::setEtat(uint8_t etat) {
 void LedManager::setFlashe(uint8_t flashe) {
   this->flashe = flashe;
 }
+
+void LedManager::eteint(void) {
+  digitalWrite(this->pin, LOW);
+}
+
+void LedManager::allume(void) {
+  digitalWrite(this->pin, HIGH);
+}

@@ -9,6 +9,8 @@ public:
   void update(void);
   void setEtat(uint8_t etat);
   void setFlashe(uint8_t flashe);
+  void eteint(void);
+  void allume(void);
 
 private:
   uint8_t etat;

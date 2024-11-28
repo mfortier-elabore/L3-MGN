@@ -22,9 +22,9 @@ public:
   LedManager* led_LTE = new LedManager(11);
   LedManager* led_RX = new LedManager(10);
 
-  uint64_t t_debut;
-  const uint64_t TEMPS_BOUCLE = 30 * 1 * 1000;  // Temps en ms pour 10 minutes
-  const uint8_t TEMPS_UPDATE = 200;             // 200ms entre les requetes polling
+  unsigned long t_debut;
+  const unsigned long TEMPS_BOUCLE = 600000L;  // Temps en ms pour 10 minutes
+  const unsigned long TEMPS_UPDATE = 200;             // 200ms entre les requetes polling
   uint8_t messageEnvoye;
   uint8_t reseauActuel;
   bool connected;
@@ -32,7 +32,7 @@ public:
   uint32_t running_minutes;
 
   uint8_t id;
-  uint8_t message[55];
+  char message[64];
 
   // Socket UDP
   const char SEND_NTN[41] = "AT%SOCKETDATA=\"SEND\",1,7,\"566961204e544e\"";
