@@ -30,13 +30,13 @@ void setup() {
 
   mgn = new MGN(&module);
 
-  //mgn->init();
+  mgn->init();
   
   console = new Console(&module);
 }
 
 void loop() {
-  console->loop();
+  //console->loop();
   
   mgn->update();
 }

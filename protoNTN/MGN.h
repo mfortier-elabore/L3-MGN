@@ -10,21 +10,22 @@
 
 #define MSG_NUM_BYTES 13
 
-class MGN {
+class MGN
+{
 public:
   // membres
-  ATcommands* module;
+  ATcommands *module;
 
   float latitude;
   float longitude;
 
-  LedManager* led_NTN = new LedManager(12);
-  LedManager* led_LTE = new LedManager(11);
-  LedManager* led_RX = new LedManager(10);
+  LedManager *led_NTN = new LedManager(12);
+  LedManager *led_LTE = new LedManager(11);
+  LedManager *led_RX = new LedManager(10);
 
   unsigned long t_debut;
-  const unsigned long TEMPS_BOUCLE = 600000L;  // Temps en ms pour 10 minutes
-  const unsigned long TEMPS_UPDATE = 200;             // 200ms entre les requetes polling
+  const unsigned long TEMPS_BOUCLE = 600000L; // Temps en ms pour 10 minutes
+  const unsigned long TEMPS_UPDATE = 200;     // 200ms entre les requetes polling
   uint8_t messageEnvoye;
   uint8_t reseauActuel;
   bool connected;
@@ -34,12 +35,8 @@ public:
   uint8_t id;
   char message[64];
 
-  // Socket UDP
-  const char SEND_NTN[41] = "AT%SOCKETDATA=\"SEND\",1,7,\"566961204e544e\"";
-  const char SEND_LTE[41] = "AT%SOCKETDATA=\"SEND\",1,7,\"566961204c5445\"";
-
   // methodes
-  MGN(ATcommands* module);
+  MGN(ATcommands *module);
   ~MGN();
 
   bool init(void);
@@ -62,6 +59,5 @@ public:
   void updateLeds(void);
   void update(void);
 };
-
 
 #endif

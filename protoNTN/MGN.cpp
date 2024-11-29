@@ -35,64 +35,83 @@ bool MGN::init()
 
   bool err = false;
 
-  // Config module
-  module->sendCommand("ATZ", "%BOOTEV:0\0", 25000);
-  delay(5000);
-  if (!module->sendCommand("AT%SETACFG=\"radiom.config.multi_rat_enable\",\"true\"", "OK\0", 10000))
-    err = false;
-  if (!module->sendCommand("AT%SETACFG=\"radiom.config.preferred_rat_list\",\"none\"", "OK\0", 10000))
-    err = false;
-  if (!module->sendCommand("AT%SETACFG=\"radiom.config.auto_preference_mode\",\"none\"", "OK\0", 10000))
-    err = false;
-  if (!module->sendCommand("AT%SETACFG=\"locsrv.operation.locsrv_enable\",\"true\"", "OK\0", 10000)) //+
-    err = false;
-  if (!module->sendCommand("AT%SETACFG=\"locsrv.internal_gnss.auto_restart\",\"enable\"", "OK\0", 10000))
-    err = false;
-  // if (!module->sendCommand("AT%GETACFG=\"ntn.conf.gnss_in_use\"", "OK\0", 10000)) //-
-  //   err = false;
-  if (!module->sendCommand("AT%SETACFG=\"modem_apps.Mode.AutoConnectMode\",\"true\"", "OK\0", 10000))
-    err = false;
-  module->sendCommand("ATZ", "%BOOTEV:0\0", 25000); //+
-  delay(5000);
-  if (!module->sendCommand("AT%RATACT=\"NBNTN\",\"1\"", "OK\0", 10000)) //+
-    err = false;
-  if (!module->sendCommand("AT%RATIMGSEL=2", "OK\0", 10000)) //+
-    err = false;
-  if (!module->sendCommand("AT+CFUN=0", "OK\0", 10000)) //+
-    err = false;
-  if (!module->sendCommand("AT%SETCFG=\"BAND\",\"23\"", "OK\0", 10000))
-    err = false;
-  //  if (!module->sendCommand("AT+CFUN=0", "OK\0", 10000))  //-
-  //    err = false;
-  //  if (!module->sendCommand("AT%NTNEV=\"POSREQ\",1", "OK\0", 10000)) //-
-  //    err = false;
-  //  if (!module->sendCommand("AT%NTNCFG=\"POS\",\"STAT\",\"45.4046\",\"-71.8922\",\"160\"", "OK\0", 10000)) //-
-  //    err = false;
-
-  if (!module->sendCommand("AT%NTNCFG=\"POS\",\"IGNSS\",\"1\"", "OK\0", 10000))
-    err = false;
-  if (!module->sendCommand("AT%IGNSSEV=\"FIX\",1", "OK\0", 10000))
-    err = false;
-  if (!module->sendCommand("AT%NOTIFYEV=\"SIB31\",1", "OK\0", 10000))
-    err = false;
-  //  if (!module->sendCommand("AT%NTNEV=\"TA\",1", "OK\0", 10000)) //-
-  //    err = false;
-  //  if (!module->sendCommand("AT%NOTIFYEV=\"RRCSTATE\",1", "OK\0", 10000)) //-
-  //    err = false;
-  if (!module->sendCommand("AT+CEREG=2", "OK\0", 10000))
-    err = false;
-  if (!module->sendCommand("AT%IGNSSACT=1", 10000))
-    err = false;
-
   char reply[255] = {0};
+
+  Serial.println("Initialisation du module type1SC ... ");
+
+  // Config module
+  if (!module->sendCommand("ATZ", "BOOT", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%SETACFG=\"radiom.config.multi_rat_enable\",\"true\"", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%SETACFG=\"radiom.config.preferred_rat_list\",\"none\"", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%SETACFG=\"radiom.config.auto_preference_mode\",\"none\"", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%SETACFG=\"locsrv.operation.locsrv_enable\",\"true\"", "OK\0", reply, 10000)) //+
+    err = true;
+  if (!module->sendCommand("AT%SETACFG=\"locsrv.internal_gnss.auto_restart\",\"enable\"", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%GETACFG=\"ntn.conf.gnss_in_use\"", "OK\0", reply, 10000)) //-
+    err = true;
+  if (!module->sendCommand("AT%SETACFG=\"modem_apps.Mode.AutoConnectMode\",\"true\"", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("ATZ", "BOOT", reply, 10000))
+    err = true;
+  delay(5000);
+  if (!module->sendCommand("AT%RATACT=\"NBNTN\",\"1\"", "OK\0", reply, 10000)) //+
+    err = true;
+  if (!module->sendCommand("AT%RATIMGSEL=2", "OK\0", reply, 10000)) //+
+    err = true;
+  if (!module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000)) //+
+    err = true;
+  if (!module->sendCommand("AT%SETCFG=\"BAND\",\"23\"", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000)) //-
+    err = true;
+  if (!module->sendCommand("AT%NTNEV=\"POSREQ\",1", "OK\0", reply, 10000)) //-
+    err = true;
+  // if (!module->sendCommand("AT%NTNCFG=\"POS\",\"STAT\",\"45.4046\",\"-71.8922\",\"160\"", "OK\0", 10000)) //-
+  //   err = true;
+  if (!module->sendCommand("AT%NTNCFG=\"POS\",\"IGNSS\",\"1\"", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%IGNSSEV=\"FIX\",1", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%NOTIFYEV=\"SIB31\",1", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%NTNEV=\"TA\",1", "OK\0", reply, 10000)) //-
+    err = true;
+  if (!module->sendCommand("AT%NOTIFYEV=\"RRCSTATE\",1", "OK\0", reply, 10000)) //-
+    err = true;
+  if (!module->sendCommand("AT+CEREG=2", "OK\0", reply, 10000))
+    err = true;
+  if (!module->sendCommand("AT%IGNSSACT=1", reply, 10000))
+    err = true;
+
+  if (err)
+  {
+    Serial.println("INITIALISATION A ECHOUE.");
+  }
+  else
+  {
+    Serial.println("INITIALISATION REUSSIE.");
+  }
+  delay(2000);
+
+  memset(reply, 0, 255);
+
+  Serial.println("Recherche position GPS...");
 
   do
   {
     module->sendCommand("AT%IGNSSINFO=\"LASTFIX\"", "OK\0", reply, 10000);
-    Serial.println(reply);
+    if (strstr(reply, "%IGNSSINFO: 2") != NULL)
+    {
+      break;
+    }
 
     module->sendCommand("AT%IGNSSACT?", "OK\0", reply, 10000);
-    Serial.println(reply);
+    // Serial.println(reply);
 
     if (strstr(reply, "%IGNSSACT: 0") != NULL)
     {
@@ -104,7 +123,7 @@ bool MGN::init()
     Serial.print(".");
   } while (1);
 
-  if (!module->sendCommand("AT+CFUN=1", 10000))
+  if (!module->sendCommand("AT+CFUN=1", reply, 10000))
     err = false;
 
   if (!switchToLTE())
@@ -244,6 +263,7 @@ bool MGN::sendData(void)
 {
 
   // char msg[54] = "AT%SOCKETDATA=\"SEND\",1,13,\"4D657373616765646532303042\"";
+  this->lireGPS();
   this->prepareMessage();
   Serial.print("Message a envoyer : ");
   Serial.println((char *)this->message);
@@ -296,12 +316,20 @@ void MGN::lireGPS(void)
     this->longitude = 0;
   }
 
+  /*
+  AT%IGNSSINFO="LASTFIX"
+
+  %IGNSSINFO: 2,"20:50:25","29/11/2024","45.404267","-71.892385","196.3",1732913425000,,,"B",6
+
+  OK
+  */
   // Reponse si position GPS:
   // %IGNSSINFO: 2,"21:29:14","12/11/2024","45.403975","-71.891657","40.0",1731446954000,,,"B",3
   // OK
   // char pos[100] = "%IGNSSINFO: 2,\"21:29:14\",\"12/11/2024\",\"45.403975\",\"-71.891657\",\"40.0\",1731446954000,,,\"B\",3\x0\xd\x0\xdOK";
   char *ptr = strstr(pos, "%IGNSSINFO:");
 
+  // Position GPS inconnue, ou commande a echoue
   if (ptr == NULL)
   {
     return;
@@ -313,36 +341,33 @@ void MGN::lireGPS(void)
   char char_latitude[11] = "";
   char char_longitude[11] = "";
 
-  uint8_t n = 9; /*
-  if(ptr_latitude[0] == 0x2D) {
-    n = 10;
+  uint8_t n = 9;
+  bool estNegatif = false;
+
+  if (ptr_latitude[0] == 0x2D)
+  {
+    estNegatif = true;
+    ++ptr_latitude;
   }
 
-  for(uint8_t i=0; i<n; ++i) {
-    char_latitude[i] = *(ptr_latitude+i);
-    char_longitude[i] = *(ptr_longitude+i);
-  }
-
-  n = 9;
-  if(ptr_longitude[0] == 0x2D) {
-    n = 10;
-    Serial.println("moins");
-  } else {
-    Serial.println(ptr_longitude[0]);
-  }
-
-  for(uint8_t i=0; i<n; ++i) {
-    longitude[i] = *(ptr_longitude+i);
+  for (uint8_t i = 0; i < n; ++i)
+  {
+    char_latitude[i] = *(ptr_latitude + i);
+    char_longitude[i] = *(ptr_longitude + i);
   }
 
   this->latitude = atof(char_latitude);
   this->longitude = atof(char_longitude);
 
-  uint8_t message[13] = { 0 };
+  if (estNegatif)
+  {
+    this->latitude = -this->latitude;
+  }
 
-  message[0]
-
-  */
+  Serial.print("Nouvelle lat / long : ");
+  Serial.print(this->latitude);
+  Serial.print(" ");
+  Serial.println(this->longitude);
 }
 
 void MGN::updateGPS(void)
@@ -410,57 +435,42 @@ void MGN::prepareMessage()
   }
 
   // Byte 13
-  Serial.print("\nCalcul checksum : ");
+  // Serial.print("\nCalcul checksum : ");
   for (int i = 0; i < 12; ++i)
   {
     checksum += payload[i];
-    Serial.print(checksum);
-    Serial.print(" ");
+    // Serial.print(checksum);
+    // Serial.print(" ");
   }
-  Serial.println();
+  // Serial.println();
 
   payload[12] = checksum;
 
   // Resultat
-  Serial.print("\nPayload : ");
+  /*Serial.print("\nPayload : ");
   for (int i = 0; i < 12; ++i)
   {
     Serial.print(payload[i]);
     Serial.print(" ");
   }
-  Serial.println();
+  Serial.println();*/
 
   // buffer
   memset(this->message, 0, 63);
 
-  Serial.print("1");
-
-  // uint8_t data[13] = { 0xa1, 0x00, 0x0b, 0x11, 0xc2, 0x8f, 0xc8, 0x87, 0x42, 0x35, 0x9d, 0xac, 0x25 };
   uint8_t index = 0;
 
   index += sprintf(this->message, "AT%%SOCKETDATA");
 
-  Serial.print("a");
-
   index += sprintf(this->message + index, "=\"SEND\",1,13,\"");
-
-  Serial.print("2");
 
   // Message a l'envers pour coincider avec prog sur le serveur
   for (int8_t i = 0; i < 13; ++i)
   {
     index += sprintf(this->message + index, "%02X", payload[i]);
-    Serial.print(".");
   }
 
-  Serial.print("3");
-
   sprintf(this->message + index, "\"");
-
-  Serial.print("4");
-
-  Serial.print("Message : ");
-  Serial.println((char *)this->message);
 }
 
 void MGN::update(void)
