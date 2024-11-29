@@ -17,12 +17,13 @@ class ATcommands {
     bool sendCommand(char *command, char *reply, uint16_t timeout = default_timeout_ms);
     bool sendCommand(char *command, char *expect, char *reply, uint16_t timeout = default_timeout_ms);
   
+    Stream *mySerial;
+    
   private:
     char replybuffer[255];
     int8_t _rst;
     bool newline = false;
     unsigned long timer;
-    Stream *mySerial;
 };
 
 #endif
