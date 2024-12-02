@@ -25,7 +25,7 @@ public:
 
   unsigned long t_debut;
   const unsigned long TEMPS_BOUCLE = 600000L; // Temps en ms pour 10 minutes
-  const unsigned long TEMPS_UPDATE = 200;     // 200ms entre les requetes polling
+  const unsigned long TEMPS_UPDATE = 2000;     // 200ms entre les requetes polling
   uint8_t messageEnvoye;
   uint8_t reseauActuel;
   bool connected;
@@ -40,21 +40,21 @@ public:
   ~MGN();
 
   bool init(void);
+  bool Type1SCInit(void);
   bool switchToLTE(void);
   bool switchToNTN(void);
 
   bool estConnecte(void);
-  bool openSocket(void);
+  bool openSocket_client(void);
+  bool openSocket_server(void);
   bool closeSocket(void);
   bool sendData(void);
+  bool getData(void);
 
   void prepareMessage(void);
 
-  void initGPS(void);
-  void lireGPS(void);
-  void updateGPS(void);
-
-  void clearBuffer(void);
+  void attendFixGNSS(void);
+  bool lireGNSS(void);
 
   void updateLeds(void);
   void update(void);

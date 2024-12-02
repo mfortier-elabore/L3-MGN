@@ -11,6 +11,70 @@ MGN::~MGN()
 {
 }
 
+bool MGN::Type1SCInit()
+{
+  char reply[255] = {0};
+  bool err = false;
+
+  Serial.println("Initialisation du module type1SC ... ");
+  Serial.print("Attente demarrage ");
+
+  // Config module
+  do
+  {
+    Serial.print(".");
+  } while (!module->sendCommand("AT", "OK", reply, 10000));
+  Serial.println(" OK!");
+
+  Serial.print("Configuration ...");
+
+  do
+  {
+    Serial.print(".");
+    err = false;
+
+    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 10000))
+      err = true;
+
+    if (!module->sendCommand("AT%SETACFG=\"radiom.config.multi_rat_enable\",\"true\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"radiom.config.preferred_rat_list\",\"none\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"radiom.config.auto_preference_mode\",\"none\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"locsrv.operation.locsrv_enable\",\"true\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"locsrv.internal_gnss.auto_restart\",\"enable\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"modem_apps.Mode.AutoConnectMode\",\"true\"", "OK\0", reply, 10000))
+      err = true;
+
+    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 10000))
+      err = true;
+
+    if (!module->sendCommand("AT%RATACT=\"NBNTN\",\"1\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%PDNSET=1,\"DATA.MONO\",\"IP\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETSYSCFG=SW_CFG.nb_band_table.band#1,ENABLE;23", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%NTNCFG=\"POS\",\"IGNSS\",\"1\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%IGNSSACT=1", "OK\0", reply, 10000))
+      err = true;
+    /*    if (!module->sendCommand("AT%GETACFG=\"ntn.conf.gnss_in_use\"", "OK\0", reply, 10000))
+          err = true;*/
+
+  } while (err);
+  Serial.println(" OK!");
+
+  return true;
+}
+
 bool MGN::init()
 {
   // leds
@@ -30,104 +94,25 @@ bool MGN::init()
 
   this->running_minutes = 2833; // get_running_minutes(); // récuperer depuis EEPROM
 
-  this->latitude = 45.403975;
-  this->longitude = -71.891657;
+  this->latitude = 0;
+  this->longitude = 0;
 
   bool err = false;
 
   char reply[255] = {0};
 
-  Serial.println("Initialisation du module type1SC ... ");
+  this->Type1SCInit();
 
-  // Config module
-  if (!module->sendCommand("ATZ", "BOOT", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%SETACFG=\"radiom.config.multi_rat_enable\",\"true\"", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%SETACFG=\"radiom.config.preferred_rat_list\",\"none\"", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%SETACFG=\"radiom.config.auto_preference_mode\",\"none\"", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%SETACFG=\"locsrv.operation.locsrv_enable\",\"true\"", "OK\0", reply, 10000)) //+
-    err = true;
-  if (!module->sendCommand("AT%SETACFG=\"locsrv.internal_gnss.auto_restart\",\"enable\"", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%GETACFG=\"ntn.conf.gnss_in_use\"", "OK\0", reply, 10000)) //-
-    err = true;
-  if (!module->sendCommand("AT%SETACFG=\"modem_apps.Mode.AutoConnectMode\",\"true\"", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("ATZ", "BOOT", reply, 10000))
-    err = true;
-  delay(5000);
-  if (!module->sendCommand("AT%RATACT=\"NBNTN\",\"1\"", "OK\0", reply, 10000)) //+
-    err = true;
-  if (!module->sendCommand("AT%RATIMGSEL=2", "OK\0", reply, 10000)) //+
-    err = true;
-  if (!module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000)) //+
-    err = true;
-  if (!module->sendCommand("AT%SETCFG=\"BAND\",\"23\"", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000)) //-
-    err = true;
-  if (!module->sendCommand("AT%NTNEV=\"POSREQ\",1", "OK\0", reply, 10000)) //-
-    err = true;
-  // if (!module->sendCommand("AT%NTNCFG=\"POS\",\"STAT\",\"45.4046\",\"-71.8922\",\"160\"", "OK\0", 10000)) //-
-  //   err = true;
-  if (!module->sendCommand("AT%NTNCFG=\"POS\",\"IGNSS\",\"1\"", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%IGNSSEV=\"FIX\",1", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%NOTIFYEV=\"SIB31\",1", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%NTNEV=\"TA\",1", "OK\0", reply, 10000)) //-
-    err = true;
-  if (!module->sendCommand("AT%NOTIFYEV=\"RRCSTATE\",1", "OK\0", reply, 10000)) //-
-    err = true;
-  if (!module->sendCommand("AT+CEREG=2", "OK\0", reply, 10000))
-    err = true;
-  if (!module->sendCommand("AT%IGNSSACT=1", reply, 10000))
-    err = true;
+  this->attendFixGNSS();
 
-  if (err)
-  {
-    Serial.println("INITIALISATION A ECHOUE.");
-  }
-  else
-  {
-    Serial.println("INITIALISATION REUSSIE.");
-  }
-  delay(2000);
-
-  memset(reply, 0, 255);
-
-  Serial.println("Recherche position GPS...");
-
+  // On rallume la radio
   do
   {
-    module->sendCommand("AT%IGNSSINFO=\"LASTFIX\"", "OK\0", reply, 10000);
-    if (strstr(reply, "%IGNSSINFO: 2") != NULL)
-    {
-      break;
-    }
+  } while (!module->sendCommand("AT+CFUN=1", "OK\0", reply, 10000));
 
-    module->sendCommand("AT%IGNSSACT?", "OK\0", reply, 10000);
-    // Serial.println(reply);
-
-    if (strstr(reply, "%IGNSSACT: 0") != NULL)
-    {
-      Serial.print("Activation INGSS .. ");
-      module->sendCommand("AT%IGNSSACT=1", "OK\0", 10000);
-    }
-
-    delay(2000);
-    Serial.print(".");
-  } while (1);
-
-  if (!module->sendCommand("AT+CFUN=1", reply, 10000))
-    err = false;
-
+  // Reseau par defaut = LTE
   if (!switchToLTE())
-    err = false;
+    err = true;
 
   if (err)
     Serial.println("INITIALISATION A ECHOUE.");
@@ -192,7 +177,7 @@ bool MGN::switchToNTN(void)
 bool MGN::estConnecte(void)
 {
   char reply[255] = {0};
-  if (!module->sendCommand("AT+CEREG?", "OK\0", reply, 1000))
+  if (!module->sendCommand("AT+CEREG?", "OK\0", reply, 5000))
   {
     // Commande a echoue, mais pas necessaire deconnecte
     return false;
@@ -211,10 +196,12 @@ bool MGN::estConnecte(void)
       // Leds solides = connecté
       if (this->reseauActuel == RESEAU_NTN)
       {
+        Serial.println(" Connecte au reseau NTN.");
         this->led_NTN->setFlashe(0);
       }
       else
       {
+        Serial.println(" Connecte au reseau LTE.");
         this->led_LTE->setFlashe(0);
       }
       return true;
@@ -234,7 +221,20 @@ bool MGN::estConnecte(void)
   }
 }
 
-bool MGN::openSocket(void)
+bool MGN::openSocket_client(void)
+{
+  // Ouvre le socket 1
+  if (!module->sendCommand("AT%SOCKETCMD=\"ALLOCATE\",1,\"UDP\",\"LISTEN\",,,7,,,1", "OK\0", 10000))
+    return false;
+
+  // Active le socket
+  if (!module->sendCommand("AT%SOCKETCMD=\"ACTIVATE\",1", "OK\0", 10000))
+    return false;
+
+  return true;
+}
+
+bool MGN::openSocket_server(void)
 {
   // Ouvre le socket 1
   if (!module->sendCommand("AT%SOCKETCMD=\"ALLOCATE\",1,\"UDP\",\"OPEN\",\"137.184.167.242\",11000,11000", "OK\0", 10000))
@@ -261,14 +261,11 @@ bool MGN::closeSocket(void)
 
 bool MGN::sendData(void)
 {
-
-  // char msg[54] = "AT%SOCKETDATA=\"SEND\",1,13,\"4D657373616765646532303042\"";
-  this->lireGPS();
   this->prepareMessage();
   Serial.print("Message a envoyer : ");
   Serial.println((char *)this->message);
 
-  if (this->openSocket())
+  if (this->openSocket_client())
   {
     Serial.print("Socket ouvert. ");
     if (!module->sendCommand(this->message, "OK\0", 10000))
@@ -286,17 +283,56 @@ bool MGN::sendData(void)
   return false;
 }
 
-void MGN::initGPS(void)
+bool MGN::getData(void)
 {
-  module->sendCommand("AT%SETACFG=\"locsrv.operation.locsrv_enable\",\"true\"", "OK\0", 10000);
-  module->sendCommand("AT%SETACFG=\"locsrv.internal_gnss.auto_restart\",\"enable\"", "OK\0", 10000);
-  module->sendCommand("ATZ", "%BOOTEV:0\0", 25000);
-  delay(5000);
-  module->sendCommand("AT%NTNCFG=\"POS\",\"IGNSS\",\"1\"", "OK\0", 10000);
-  module->sendCommand("AT%IGNSSACT=1", "OK\0", 10000);
+  char reply[255] = {0};
+  
+  if (!module->sendCommand("AT%SOCKETDATA=\"RECEIVE\",1,1500", "OK\0", reply, 10000))
+  {
+    return false;
+  }
+
+  if (strstr(reply, "%SOCKETDATA:1") != NULL)
+  {
+    Serial.print("Recu : ");
+    Serial.println(reply);
+    return true;
+  }
+
+  return false;
 }
 
-void MGN::lireGPS(void)
+void MGN::attendFixGNSS(void)
+{
+  char reply[255] = {0};
+
+  Serial.print("Recherche position GNSS...");
+
+  do
+  {
+    module->sendCommand("AT%IGNSSINFO=\"LASTFIX\"", "OK\0", reply, 10000);
+    if (strstr(reply, "%IGNSSINFO: 2") != NULL)
+    {
+      break;
+    }
+
+    // Dans certains cas, IGNSSACT devenait faux ?
+    // ces lignes forcent IGNSSACT a vrai
+    module->sendCommand("AT%IGNSSACT?", "OK\0", reply, 10000);
+    if (strstr(reply, "%IGNSSACT: 0") != NULL)
+    {
+      Serial.print("Activation INGSS .. ");
+      module->sendCommand("AT%IGNSSACT=1", "OK\0", 10000);
+    }
+
+    delay(2000);
+    Serial.print(".");
+  } while (1);
+
+  Serial.println(" OK!");
+}
+
+bool MGN::lireGNSS(void)
 {
   char pos[255] = {0};
 
@@ -314,6 +350,8 @@ void MGN::lireGPS(void)
     Serial.println("Position GPS inconnue.");
     this->latitude = 0;
     this->longitude = 0;
+
+    return false;
   }
 
   /*
@@ -332,7 +370,7 @@ void MGN::lireGPS(void)
   // Position GPS inconnue, ou commande a echoue
   if (ptr == NULL)
   {
-    return;
+    return false;
   }
 
   char *ptr_latitude = ptr + 39;  // longueur 9
@@ -368,10 +406,8 @@ void MGN::lireGPS(void)
   Serial.print(this->latitude);
   Serial.print(" ");
   Serial.println(this->longitude);
-}
 
-void MGN::updateGPS(void)
-{
+  return true;
 }
 
 void MGN::updateLeds(void)
@@ -492,12 +528,15 @@ void MGN::update(void)
       Serial.println("Boucle terminee, nouvelle boucle.");
       this->messageEnvoye = 0;
       this->t_debut = millis();
+      this->attendFixGNSS();
+      this->lireGNSS();
       uint8_t i = 0;
       do
       {
         delay(10);
         ++i;
-      } while (!this->switchToLTE() && i < 5);
+      } while (!this->switchToLTE() && i < 50);
+      Serial.print("Attente de connexion ");
     }
     else
     {
@@ -507,7 +546,6 @@ void MGN::update(void)
       Serial.print(this->TEMPS_BOUCLE);
       Serial.print(" > ");
       Serial.println(millis());*/
-      Serial.print(".");
     }
 
     // Message envoyé ?
@@ -524,10 +562,25 @@ void MGN::update(void)
           // Echec envoi du message
         }
       }
+      Serial.print(".");
     }
-    else
+    else // Envoie terminé, mode écoute
     {
-      // TODO: Mode ecoute
+      if (this->estConnecte())
+      {
+        if (this->getData())
+        {
+          Serial.println("Donnees recues!");
+        }
+        else
+        { // Attente donnees
+          Serial.print("_");
+        }
+      }
+      else
+      { // Attente connexion (reception)
+        Serial.print("-");
+      }
     }
 
     // Moitié du temps écoulé dans la boucle de 10 min
@@ -542,3 +595,43 @@ void MGN::update(void)
     }
   }
 }
+
+/*
+
+
+    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"radiom.config.multi_rat_enable\",\"true\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"radiom.config.preferred_rat_list\",\"none\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"radiom.config.auto_preference_mode\",\"none\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"locsrv.operation.locsrv_enable\",\"true\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"locsrv.internal_gnss.auto_restart\",\"enable\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%GETACFG=\"ntn.conf.gnss_in_use\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%SETACFG=\"modem_apps.Mode.AutoConnectMode\",\"true\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%RATIMGSEL=2", "OK\0", reply, 10000))
+      err = true;
+
+    // Cette commande semble retourner "ERROR" si la bande est deja selectionnee.
+    // A preceder d'une vérification !
+    module->sendCommand("AT%SETCFG=\"BAND\",\"23\"", "OK\0", reply, 10000);
+
+    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 10000))
+      err = true;
+
+    // Cette commande semble retourner "ERROR" si la radio est deja OFF.
+    // A preceder d'une vérification !
+    module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000);
+
+    if (!module->sendCommand("AT%NTNCFG=\"POS\",\"IGNSS\",\"1\"", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT+CEREG=2", "OK\0", reply, 10000))
+      err = true;
+    if (!module->sendCommand("AT%IGNSSACT=1", "OK\0", reply, 10000))
+*/

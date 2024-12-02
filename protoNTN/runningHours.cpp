@@ -82,7 +82,7 @@ void RunningHours_readSavedValue(RunningHours_t* rh) {
 
   rh->runningSeconds = savedValue;
 
-  Serial.print("Valeur initialisee : ");
+  Serial.print("Secondes fonctionnement en memoire : ");
   Serial.println(rh->runningSeconds);
 }
 

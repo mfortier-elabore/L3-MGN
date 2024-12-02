@@ -11,6 +11,7 @@ public:
   void setFlashe(uint8_t flashe);
   void eteint(void);
   void allume(void);
+  void toggle(void);
 
 private:
   uint8_t etat;

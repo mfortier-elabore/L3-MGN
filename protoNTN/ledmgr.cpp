@@ -1,6 +1,7 @@
 #include "ledmgr.h"
 
-LedManager::LedManager(uint8_t pin) {
+LedManager::LedManager(uint8_t pin)
+{
   this->etat = 0;
   this->flashe = 0;
   this->t_debut = 0;
@@ -9,7 +10,8 @@ LedManager::LedManager(uint8_t pin) {
   pinMode(this->pin, OUTPUT);
 }
 
-void LedManager::update() {
+void LedManager::update()
+{
   /*Serial.print("Pin ");
   Serial.print(this->pin);
   Serial.print(" ");
@@ -17,32 +19,48 @@ void LedManager::update() {
   Serial.print(" ");
   Serial.println(this->flashe);*/
 
-  if (this->t_debut + TEMPS_FLASH < millis()) {
+  if (this->t_debut + TEMPS_FLASH < millis())
+  {
     this->t_debut = millis();
-    if (this->etat) {
-      if (this->flashe) {
+    if (this->etat)
+    {
+      if (this->flashe)
+      {
         digitalWrite(this->pin, !digitalRead(this->pin));
-      } else {
+      }
+      else
+      {
         digitalWrite(this->pin, HIGH);
       }
-    } else {
+    }
+    else
+    {
       digitalWrite(this->pin, LOW);
     }
   }
 }
 
-void LedManager::setEtat(uint8_t etat) {
+void LedManager::setEtat(uint8_t etat)
+{
   this->etat = etat;
 }
 
-void LedManager::setFlashe(uint8_t flashe) {
+void LedManager::setFlashe(uint8_t flashe)
+{
   this->flashe = flashe;
 }
 
-void LedManager::eteint(void) {
+void LedManager::eteint(void)
+{
   digitalWrite(this->pin, LOW);
 }
 
-void LedManager::allume(void) {
+void LedManager::allume(void)
+{
   digitalWrite(this->pin, HIGH);
+}
+
+void LedManager::toggle(void)
+{
+  digitalWrite(this->pin, !digitalRead(this->pin));
 }
