@@ -286,7 +286,7 @@ bool MGN::sendData(void)
 bool MGN::getData(void)
 {
   char reply[255] = {0};
-  
+
   if (!module->sendCommand("AT%SOCKETDATA=\"RECEIVE\",1,1500", "OK\0", reply, 10000))
   {
     return false;
@@ -509,6 +509,112 @@ void MGN::prepareMessage()
   sprintf(this->message + index, "\"");
 }
 
+void MGN::decodeMessage(char *message)
+{
+  // Format recu :
+  // 0001 ou 0000
+  if(atoi(message) == 1){
+    Serial.println("Allume LED Rx.");
+    this->led_RX->setEtat(1);
+  } else {
+    Serial.println("Eteint LED Rx.");
+    this->led_RX->setEtat(0);
+  }
+}
+
+bool MGN::messageRecu(void)
+{
+  char reply[255] = {0};
+
+  if (!module->sendCommand("AT%SOCKETDATA=\"RECEIVE\",1,1500", "OK\0", reply, 5000))
+  {
+    // Commande a echoue, mais pas necessaire deconnecte
+    return false;
+  }
+  else
+  {
+    char *ptr = strstr(reply, "%SOCKETDATA:1,");
+
+    if (ptr == NULL)
+    {
+      // Reply invalide
+      return false;
+    }
+
+    // "%SOCKETDATA:1,XX,
+    //                ^ pos 14
+    ptr = ptr + 14;
+
+    if (ptr[0] == '0')
+    {
+      // Pas de message recu
+      return false;
+    }
+
+    uint8_t index = 0;
+    unsigned char c;
+    unsigned char num_char_ascii[2] = {0};
+    do
+    {
+      c = ptr[index];
+      if (c == ',')
+      {
+        break;
+      }
+      else
+      {
+        num_char_ascii[index] = ptr[index];
+      }
+      ++index;
+    } while (1);
+
+    if (index == 0)
+    {
+      Serial.println("Nombre de caracteres invalide.");
+      return false;
+    }
+
+    // Nombre de caracteres a aller prendre dans la chaine
+    uint8_t num_char = atoi(num_char_ascii);
+
+    // Debut de la chaîne est le signe '"'
+    ptr = strstr(reply, "\"");
+
+    if (ptr == NULL)
+    {
+      // Message ne contient pas de '"'
+      return false;
+    }
+
+    // prochain caractere est le debut de la chaine
+    ptr = ptr + 1;
+
+    unsigned char message[255];
+    memset(message, 0, 255);
+
+    index = 0;
+    do
+    {
+      c = ptr[index];
+      if (c == '"')
+      {
+        // Fin de la chaîne atteint
+        break;
+      }
+      else
+      {
+        message[index] = ptr[index];
+      }
+      ++index;
+    } while (index < 255);
+  }
+
+  this->decodeMessage(message);
+
+  Serial.print("Message recu : ");
+  Serial.println(message);
+}
+
 void MGN::update(void)
 {
   static unsigned long dernier_update = 0;
@@ -571,6 +677,7 @@ void MGN::update(void)
         if (this->getData())
         {
           Serial.println("Donnees recues!");
+          this->messageRecu();
         }
         else
         { // Attente donnees

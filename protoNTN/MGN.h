@@ -52,6 +52,8 @@ public:
   bool getData(void);
 
   void prepareMessage(void);
+  void decodeMessage(char * message);
+  bool messageRecu(void);
 
   void attendFixGNSS(void);
   bool lireGNSS(void);
