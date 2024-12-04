@@ -16,7 +16,7 @@
 
 HardwareSerial *moduleSerial = &Serial1;
 
-ATcommands module = ATcommands(RST, true);  // Use "false" if you don't want AT commands with newline, "true" otherwise
+ATcommands module = ATcommands(RST, true);  // true: commandes avec newline
 
 MGN *mgn;
 Console * console;
@@ -25,7 +25,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  moduleSerial->begin(115200);  // Verify your module's baud rate/home/marc-fortier/Arduino/libraries/AT-Command-Library-master/ATcommands.cpp
+  moduleSerial->begin(115200);
   module.begin(*moduleSerial);
 
   mgn = new MGN(&module);

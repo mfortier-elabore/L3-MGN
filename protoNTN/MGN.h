@@ -45,15 +45,15 @@ public:
   bool switchToNTN(void);
 
   bool estConnecte(void);
-  bool openSocket_client(void);
   bool openSocket_server(void);
+  bool openSocket_client(void);
   bool closeSocket(void);
   bool sendData(void);
   bool getData(void);
 
   void prepareMessage(void);
   void decodeMessage(char * message);
-  bool messageRecu(void);
+  bool messageRecu(char * reply);
 
   void attendFixGNSS(void);
   bool lireGNSS(void);

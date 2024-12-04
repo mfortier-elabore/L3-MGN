@@ -221,31 +221,53 @@ bool MGN::estConnecte(void)
   }
 }
 
-bool MGN::openSocket_client(void)
+bool MGN::openSocket_server(void)
 {
-  // Ouvre le socket 1
-  if (!module->sendCommand("AT%SOCKETCMD=\"ALLOCATE\",1,\"UDP\",\"LISTEN\",,,7,,,1", "OK\0", 10000))
+  // Verifie si le socket est deja ouvert
+  // AT%SOCKETCMD?
+  // AT%SOCKETCMD?
+  //
+  // OK
+  char reply[255] = {0};
+
+  if (!module->sendCommand("AT%SOCKETCMD?", "OK\0", reply, 10000))
     return false;
 
+  if (strstr(reply, "%SOCKETCMD:1,\"ACTIVATED\"") != NULL)
+  {
+    Serial.println("Socket deja ouvert.");
+    return true;
+  }
+
+  // Ouvre le socket 1
+  if (!module->sendCommand("AT%SOCKETCMD=\"ALLOCATE\",1,\"UDP\",\"LISTEN\",,,7,,,1", "OK\0", reply, 10000))
+    return false;
+
+  // %SOCKETCMD:1,"DEACTIVATED"
+  //
+  // OK
+
   // Active le socket
-  if (!module->sendCommand("AT%SOCKETCMD=\"ACTIVATE\",1", "OK\0", 10000))
+  if (!module->sendCommand("AT%SOCKETCMD=\"ACTIVATE\",1", "OK\0", reply, 10000))
     return false;
 
   return true;
 }
 
-bool MGN::openSocket_server(void)
+bool MGN::openSocket_client(void)
 {
+  char reply[255] = {0};
+
   // Ouvre le socket 1
-  if (!module->sendCommand("AT%SOCKETCMD=\"ALLOCATE\",1,\"UDP\",\"OPEN\",\"137.184.167.242\",11000,11000", "OK\0", 10000))
+  if (!module->sendCommand("AT%SOCKETCMD=\"ALLOCATE\",1,\"UDP\",\"OPEN\",\"137.184.167.242\",11000,11000", "OK\0", reply, 10000))
     return false;
 
   // Met les options necessaires
-  if (!module->sendCommand("AT%SOCKETCMD=\"SETOPT\",1,36000,1", "OK\0", 10000))
+  if (!module->sendCommand("AT%SOCKETCMD=\"SETOPT\",1,36000,1", "OK\0", reply, 10000))
     return false;
 
   // Active le socket
-  if (!module->sendCommand("AT%SOCKETCMD=\"ACTIVATE\",1", "OK\0", 10000))
+  if (!module->sendCommand("AT%SOCKETCMD=\"ACTIVATE\",1", "OK\0", reply, 10000))
     return false;
 
   return true;
@@ -253,10 +275,15 @@ bool MGN::openSocket_server(void)
 
 bool MGN::closeSocket(void)
 {
+  char reply[255] = {0};
+
   // Supprime le socket 1
   Serial.println("Socket ferme. ");
-  if (!module->sendCommand("AT%SOCKETCMD=\"DELETE\",1", "OK\0", 10000))
+  if (!module->sendCommand("AT%SOCKETCMD=\"DELETE\",1", "OK\0", reply, 10000))
+  {
+    Serial.println("Erreur! ");
     return false;
+  }
 }
 
 bool MGN::sendData(void)
@@ -287,18 +314,29 @@ bool MGN::getData(void)
 {
   char reply[255] = {0};
 
+  if (!this->openSocket_server())
+  {
+    return false;
+  }
+  Serial.println("Socket ouvert.");
+
   if (!module->sendCommand("AT%SOCKETDATA=\"RECEIVE\",1,1500", "OK\0", reply, 10000))
   {
+    Serial.println("Commande Receive a echoue.");
+    //this->closeSocket();
     return false;
   }
 
   if (strstr(reply, "%SOCKETDATA:1") != NULL)
   {
-    Serial.print("Recu : ");
-    Serial.println(reply);
+    this->messageRecu(reply);
+
+    //this->closeSocket();
     return true;
   }
 
+  Serial.println("Reply etait invalide.");
+  //this->closeSocket();
   return false;
 }
 
@@ -307,7 +345,11 @@ void MGN::attendFixGNSS(void)
   char reply[255] = {0};
 
   Serial.print("Recherche position GNSS...");
-
+  this->led_RX->setEtat(1);
+  this->led_RX->setFlashe(1);
+  this->led_NTN->setEtat(0);
+  this->led_LTE->setEtat(0);
+  uint8_t enter = 0;
   do
   {
     module->sendCommand("AT%IGNSSINFO=\"LASTFIX\"", "OK\0", reply, 10000);
@@ -318,16 +360,27 @@ void MGN::attendFixGNSS(void)
 
     // Dans certains cas, IGNSSACT devenait faux ?
     // ces lignes forcent IGNSSACT a vrai
-    module->sendCommand("AT%IGNSSACT?", "OK\0", reply, 10000);
+    /*module->sendCommand("AT%IGNSSACT?", "OK\0", reply, 10000);
     if (strstr(reply, "%IGNSSACT: 0") != NULL)
     {
       Serial.print("Activation INGSS .. ");
       module->sendCommand("AT%IGNSSACT=1", "OK\0", 10000);
+    }*/
+
+    delay(500);
+    Serial.print(".");
+    ++enter;
+    if (enter > 100)
+    {
+      enter = 0;
+      Serial.println();
     }
 
-    delay(2000);
-    Serial.print(".");
+    this->updateLeds();
   } while (1);
+
+  this->led_RX->setEtat(0);
+  this->led_RX->setFlashe(0);
 
   Serial.println(" OK!");
 }
@@ -428,6 +481,18 @@ void MGN::prepareMessage()
   uint32_t running_minutes = this->running_minutes;
   uint8_t checksum = 0;
 
+  Serial.print("Donnees : ");
+  Serial.print(network);
+  Serial.print(", ");
+  Serial.print(id);
+  Serial.print(", ");
+  Serial.print(lat);
+  Serial.print(", ");
+  Serial.print(longitude);
+  Serial.print(", ");
+  Serial.print(running_minutes);
+  Serial.println(". ");
+
   uint8_t payload[MSG_NUM_BYTES] = {0};
 
   // Valeurs
@@ -500,7 +565,6 @@ void MGN::prepareMessage()
 
   index += sprintf(this->message + index, "=\"SEND\",1,13,\"");
 
-  // Message a l'envers pour coincider avec prog sur le serveur
   for (int8_t i = 0; i < 13; ++i)
   {
     index += sprintf(this->message + index, "%02X", payload[i]);
@@ -513,101 +577,101 @@ void MGN::decodeMessage(char *message)
 {
   // Format recu :
   // 0001 ou 0000
-  if(atoi(message) == 1){
+  if (atoi(message) == 1)
+  {
     Serial.println("Allume LED Rx.");
     this->led_RX->setEtat(1);
-  } else {
+  }
+  else
+  {
     Serial.println("Eteint LED Rx.");
     this->led_RX->setEtat(0);
   }
 }
 
-bool MGN::messageRecu(void)
+bool MGN::messageRecu(char *reply)
 {
-  char reply[255] = {0};
+  Serial.print("Reply recu : ");
+  Serial.println(reply);
+  char *ptr = strstr(reply, "%SOCKETDATA:1,");
 
-  if (!module->sendCommand("AT%SOCKETDATA=\"RECEIVE\",1,1500", "OK\0", reply, 5000))
+  if (ptr == NULL)
   {
-    // Commande a echoue, mais pas necessaire deconnecte
+    // Reply invalide
+    Serial.println("Reply invalide.");
     return false;
   }
-  else
+
+  // "%SOCKETDATA:1,XX,
+  //                ^ pos 14
+  ptr = ptr + 14;
+
+  if (ptr[0] == '0')
   {
-    char *ptr = strstr(reply, "%SOCKETDATA:1,");
-
-    if (ptr == NULL)
-    {
-      // Reply invalide
-      return false;
-    }
-
-    // "%SOCKETDATA:1,XX,
-    //                ^ pos 14
-    ptr = ptr + 14;
-
-    if (ptr[0] == '0')
-    {
-      // Pas de message recu
-      return false;
-    }
-
-    uint8_t index = 0;
-    unsigned char c;
-    unsigned char num_char_ascii[2] = {0};
-    do
-    {
-      c = ptr[index];
-      if (c == ',')
-      {
-        break;
-      }
-      else
-      {
-        num_char_ascii[index] = ptr[index];
-      }
-      ++index;
-    } while (1);
-
-    if (index == 0)
-    {
-      Serial.println("Nombre de caracteres invalide.");
-      return false;
-    }
-
-    // Nombre de caracteres a aller prendre dans la chaine
-    uint8_t num_char = atoi(num_char_ascii);
-
-    // Debut de la chaîne est le signe '"'
-    ptr = strstr(reply, "\"");
-
-    if (ptr == NULL)
-    {
-      // Message ne contient pas de '"'
-      return false;
-    }
-
-    // prochain caractere est le debut de la chaine
-    ptr = ptr + 1;
-
-    unsigned char message[255];
-    memset(message, 0, 255);
-
-    index = 0;
-    do
-    {
-      c = ptr[index];
-      if (c == '"')
-      {
-        // Fin de la chaîne atteint
-        break;
-      }
-      else
-      {
-        message[index] = ptr[index];
-      }
-      ++index;
-    } while (index < 255);
+    // Pas de message recu
+    Serial.println("Aucun caractere recu.");
+    return false;
   }
+
+  uint8_t index = 0;
+  unsigned char c;
+  unsigned char num_char_ascii[2] = {0};
+  do
+  {
+    c = ptr[index];
+    if (c == ',')
+    {
+      break;
+    }
+    else
+    {
+      num_char_ascii[index] = ptr[index];
+    }
+    ++index;
+  } while (1);
+
+  if (index == 0)
+  {
+    Serial.println("Nombre de caracteres invalide.");
+    return false;
+  }
+
+  // Nombre de caracteres a aller prendre dans la chaine
+  uint8_t num_char = atoi(num_char_ascii);
+
+  // Debut de la chaîne est le signe '"'
+  if (strstr(reply, "\"") == NULL)
+  {
+    // Message ne contient pas de '"'
+    Serial.println("N'a pas trouve de signe \".");
+    return false;
+  }
+
+  do {
+    ++ptr;
+  } while(ptr[0] != '\"');
+
+  // prochain caractere est le debut de la chaine
+  ptr = ptr + 1;
+
+  char message[255];
+  memset(message, 0, 255);
+
+  index = 0;
+  do
+  {
+    c = ptr[index];
+    if (c == '"')
+    {
+      // Fin de la chaîne atteint
+      break;
+    }
+    else
+    {
+      message[index] = ptr[index];
+    }
+    ++index;
+  } while (index < 255);
 
   this->decodeMessage(message);
 
@@ -631,6 +695,7 @@ void MGN::update(void)
     // Boucle de 10 minutes écoulée ?
     if (this->t_debut + this->TEMPS_BOUCLE < millis())
     {
+      this->closeSocket();
       Serial.println("Boucle terminee, nouvelle boucle.");
       this->messageEnvoye = 0;
       this->t_debut = millis();
@@ -670,14 +735,13 @@ void MGN::update(void)
       }
       Serial.print(".");
     }
-    else // Envoie terminé, mode écoute
+    else // Envoi terminé, mode écoute
     {
       if (this->estConnecte())
       {
         if (this->getData())
         {
-          Serial.println("Donnees recues!");
-          this->messageRecu();
+          // this->messageRecu();
         }
         else
         { // Attente donnees
@@ -691,6 +755,7 @@ void MGN::update(void)
     }
 
     // Moitié du temps écoulé dans la boucle de 10 min
+    // Mettre if(1) pour tester la connexion au NTN
     if (!this->messageEnvoye && this->t_debut + this->TEMPS_BOUCLE / 2 < millis())
     {
       uint8_t i = 0;
