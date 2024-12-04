@@ -5,6 +5,8 @@
 MGN::MGN(ATcommands *mod)
 {
   this->module = mod;
+  this->commande = false;
+  this->getID();
 }
 
 MGN::~MGN()
@@ -23,7 +25,7 @@ bool MGN::Type1SCInit()
   do
   {
     Serial.print(".");
-  } while (!module->sendCommand("AT", "OK", reply, 10000));
+  } while (!module->sendCommand("AT", "OK", reply, 20000));
   Serial.println(" OK!");
 
   Serial.print("Configuration ...");
@@ -33,7 +35,7 @@ bool MGN::Type1SCInit()
     Serial.print(".");
     err = false;
 
-    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 10000))
+    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 20000))
       err = true;
 
     if (!module->sendCommand("AT%SETACFG=\"radiom.config.multi_rat_enable\",\"true\"", "OK\0", reply, 10000))
@@ -49,7 +51,7 @@ bool MGN::Type1SCInit()
     if (!module->sendCommand("AT%SETACFG=\"modem_apps.Mode.AutoConnectMode\",\"true\"", "OK\0", reply, 10000))
       err = true;
 
-    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 10000))
+    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 20000))
       err = true;
 
     if (!module->sendCommand("AT%RATACT=\"NBNTN\",\"1\"", "OK\0", reply, 10000))
@@ -77,6 +79,9 @@ bool MGN::Type1SCInit()
 
 bool MGN::init()
 {
+  // Bouton
+  pinMode(BOUTON_PIN, INPUT_PULLUP);
+
   // leds
   led_NTN = new LedManager(12);
   led_LTE = new LedManager(11);
@@ -90,9 +95,8 @@ bool MGN::init()
   this->messageEnvoye = 0;
   this->reseauActuel = RESEAU_NONE;
   this->connected = false;
-  this->id = 5;
 
-  this->running_minutes = 2833; // get_running_minutes(); // récuperer depuis EEPROM
+  this->running_minutes = MGN_RunningHours_getDigitalInCount();
 
   this->latitude = 0;
   this->longitude = 0;
@@ -104,6 +108,7 @@ bool MGN::init()
   this->Type1SCInit();
 
   this->attendFixGNSS();
+  this->lireGNSS();
 
   // On rallume la radio
   do
@@ -192,17 +197,20 @@ bool MGN::estConnecte(void)
 
     if (y == '1' || y == '5')
     { // 1 : connected, 5 : connected (roaming)
-      this->connected = true;
-      // Leds solides = connecté
-      if (this->reseauActuel == RESEAU_NTN)
+      if (!this->connected)
       {
-        Serial.println(" Connecte au reseau NTN.");
-        this->led_NTN->setFlashe(0);
-      }
-      else
-      {
-        Serial.println(" Connecte au reseau LTE.");
-        this->led_LTE->setFlashe(0);
+        this->connected = true;
+        // Leds solides = connecté
+        if (this->reseauActuel == RESEAU_NTN)
+        {
+          Serial.println("Connecte au reseau NTN.");
+          this->led_NTN->setFlashe(0);
+        }
+        else
+        {
+          Serial.println("Connecte au reseau LTE.");
+          this->led_LTE->setFlashe(0);
+        }
       }
       return true;
     }
@@ -216,7 +224,11 @@ bool MGN::estConnecte(void)
     {
       this->led_LTE->setFlashe(1);
     }
-    this->connected = false;
+    if (this->connected)
+    {
+      Serial.println("Deconnecte.");
+      this->connected = false;
+    }
     return false;
   }
 }
@@ -235,7 +247,7 @@ bool MGN::openSocket_server(void)
 
   if (strstr(reply, "%SOCKETCMD:1,\"ACTIVATED\"") != NULL)
   {
-    Serial.println("Socket deja ouvert.");
+    // Serial.println("Socket deja ouvert.");
     return true;
   }
 
@@ -250,6 +262,8 @@ bool MGN::openSocket_server(void)
   // Active le socket
   if (!module->sendCommand("AT%SOCKETCMD=\"ACTIVATE\",1", "OK\0", reply, 10000))
     return false;
+
+  Serial.println("Socket ouvert.");
 
   return true;
 }
@@ -318,26 +332,37 @@ bool MGN::getData(void)
   {
     return false;
   }
-  Serial.println("Socket ouvert.");
 
   if (!module->sendCommand("AT%SOCKETDATA=\"RECEIVE\",1,1500", "OK\0", reply, 10000))
   {
     Serial.println("Commande Receive a echoue.");
-    //this->closeSocket();
     return false;
   }
 
   if (strstr(reply, "%SOCKETDATA:1") != NULL)
   {
-    this->messageRecu(reply);
-
-    //this->closeSocket();
-    return true;
+    return this->messageRecu(reply);
   }
 
   Serial.println("Reply etait invalide.");
-  //this->closeSocket();
   return false;
+}
+
+void MGN::getID(void)
+{
+  byte buf = EEPROM.read(MEMORY_ADDRESS_ID);
+  this->id = (uint8_t)buf;
+
+  Serial.print("ID : ");
+  Serial.println(this->id);
+}
+
+void MGN::setID(uint8_t id)
+{
+  byte buf = (byte)id;
+  EEPROM.write(MEMORY_ADDRESS_ID, buf);
+
+  this->getID();
 }
 
 void MGN::attendFixGNSS(void)
@@ -350,9 +375,12 @@ void MGN::attendFixGNSS(void)
   this->led_NTN->setEtat(0);
   this->led_LTE->setEtat(0);
   uint8_t enter = 0;
+
+  module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000);
+
   do
   {
-    module->sendCommand("AT%IGNSSINFO=\"LASTFIX\"", "OK\0", reply, 10000);
+    module->sendCommand("AT%IGNSSINFO=\"FIX\"", "OK\0", reply, 10000);
     if (strstr(reply, "%IGNSSINFO: 2") != NULL)
     {
       break;
@@ -360,12 +388,12 @@ void MGN::attendFixGNSS(void)
 
     // Dans certains cas, IGNSSACT devenait faux ?
     // ces lignes forcent IGNSSACT a vrai
-    /*module->sendCommand("AT%IGNSSACT?", "OK\0", reply, 10000);
+    module->sendCommand("AT%IGNSSACT?", "OK\0", reply, 10000);
     if (strstr(reply, "%IGNSSACT: 0") != NULL)
     {
-      Serial.print("Activation INGSS .. ");
+      Serial.print("Activation INGSS ... ");
       module->sendCommand("AT%IGNSSACT=1", "OK\0", 10000);
-    }*/
+    }
 
     delay(500);
     Serial.print(".");
@@ -382,6 +410,8 @@ void MGN::attendFixGNSS(void)
   this->led_RX->setEtat(0);
   this->led_RX->setFlashe(0);
 
+  module->sendCommand("AT+CFUN=1", "OK\0", reply, 10000);
+
   Serial.println(" OK!");
 }
 
@@ -390,7 +420,7 @@ bool MGN::lireGNSS(void)
   char pos[255] = {0};
 
   module->sendCommand("AT%IGNSSINFO=\"LASTFIX\"", "OK\0", pos, 1000);
-  Serial.println(pos);
+  // Serial.println(pos);
 
   // Réponse si pas de position GPS
   // AT%IGNSSINFO="LASTFIX"
@@ -475,7 +505,7 @@ void MGN::prepareMessage()
   // Message a envoyer
   uint8_t network;
   uint8_t id = this->id;
-  uint8_t cmd = 0;
+  uint8_t cmd = this->commande;
   float lat = this->latitude;
   float longitude = this->longitude;
   uint32_t running_minutes = this->running_minutes;
@@ -485,6 +515,8 @@ void MGN::prepareMessage()
   Serial.print(network);
   Serial.print(", ");
   Serial.print(id);
+  Serial.print(", ");
+  Serial.print(cmd);
   Serial.print(", ");
   Serial.print(lat);
   Serial.print(", ");
@@ -506,7 +538,9 @@ void MGN::prepareMessage()
   }
 
   // Byte 0
-  this->message[0] = id | (network << 5) | (cmd << 6);
+  payload[0] = id | (network << 5) | (cmd << 6);
+  Serial.print("Byte 0 : ");
+  Serial.println((uint8_t)this->message[0]);
 
   // Bytes 1:4
   float *lat_p = &lat;
@@ -576,23 +610,45 @@ void MGN::prepareMessage()
 void MGN::decodeMessage(char *message)
 {
   // Format recu :
-  // 0001 ou 0000
-  if (atoi(message) == 1)
+  // CMD :    01 ou 00
+  // set id : 1x
+  Serial.print("Message : ");
+  Serial.print(message);
+  char byte0_str[2] = {0};
+  char byte1_str[2] = {0};
+
+  memcpy(byte0_str, &(message[0]), 1);
+  memcpy(byte1_str, &(message[1]), 1);
+
+  uint8_t byte0 = atoi(byte0_str);
+  uint8_t byte1 = atoi(byte1_str);
+
+  if (byte0 == 0) // CMD
   {
-    Serial.println("Allume LED Rx.");
-    this->led_RX->setEtat(1);
+    if (byte1 == 1) // Set
+    {
+      Serial.println("Allume LED Rx.");
+      this->led_RX->setEtat(1);
+      this->commande = true;
+    }
+    else if (byte1 == 0) // Reset
+    {
+      Serial.println("Eteint LED Rx.");
+      this->led_RX->setEtat(0);
+      this->commande = false;
+    }
   }
-  else
+  else if (byte0 == 1) // Set ID
   {
-    Serial.println("Eteint LED Rx.");
-    this->led_RX->setEtat(0);
+    if (byte1 != 0)
+    {
+      this->setID(byte1);
+    }
   }
 }
 
 bool MGN::messageRecu(char *reply)
 {
-  Serial.print("Reply recu : ");
-  Serial.println(reply);
   char *ptr = strstr(reply, "%SOCKETDATA:1,");
 
   if (ptr == NULL)
@@ -609,7 +665,7 @@ bool MGN::messageRecu(char *reply)
   if (ptr[0] == '0')
   {
     // Pas de message recu
-    Serial.println("Aucun caractere recu.");
+    // Serial.println("Aucun caractere recu.");
     return false;
   }
 
@@ -647,9 +703,10 @@ bool MGN::messageRecu(char *reply)
     return false;
   }
 
-  do {
+  do
+  {
     ++ptr;
-  } while(ptr[0] != '\"');
+  } while (ptr[0] != '\"');
 
   // prochain caractere est le debut de la chaine
   ptr = ptr + 1;
@@ -675,8 +732,8 @@ bool MGN::messageRecu(char *reply)
 
   this->decodeMessage(message);
 
-  Serial.print("Message recu : ");
-  Serial.println(message);
+  // Serial.print("Message recu : ");
+  // Serial.println(message);
 }
 
 void MGN::update(void)
@@ -684,6 +741,7 @@ void MGN::update(void)
   static unsigned long dernier_update = 0;
   updateLeds();
   MGN_RunningHours_update();
+  this->running_minutes = MGN_RunningHours_getDigitalInCount();
   delay(10);
 
   // Delai entre les requetes
@@ -739,13 +797,16 @@ void MGN::update(void)
     {
       if (this->estConnecte())
       {
-        if (this->getData())
+        if (!this->getData())
         {
-          // this->messageRecu();
+          Serial.print(".");
         }
-        else
-        { // Attente donnees
-          Serial.print("_");
+        // Si bouton appuyé, force l'envoi d'un paquet
+        if (!digitalRead(BOUTON_PIN))
+        {
+          Serial.println("Demande envoi paquet.");
+          this->closeSocket();
+          this->sendData();
         }
       }
       else
@@ -756,14 +817,17 @@ void MGN::update(void)
 
     // Moitié du temps écoulé dans la boucle de 10 min
     // Mettre if(1) pour tester la connexion au NTN
-    if (!this->messageEnvoye && this->t_debut + this->TEMPS_BOUCLE / 2 < millis())
+    if (1) //! this->messageEnvoye && this->t_debut + this->TEMPS_BOUCLE / 2 < millis())
     {
-      uint8_t i = 0;
-      do
+      if (this->reseauActuel != RESEAU_NTN)
       {
-        delay(10);
-        ++i;
-      } while (!this->switchToNTN() && i < 5);
+        uint8_t i = 0;
+        do
+        {
+          delay(10);
+          ++i;
+        } while (!this->switchToNTN() && i < 5);
+      }
     }
   }
 }
