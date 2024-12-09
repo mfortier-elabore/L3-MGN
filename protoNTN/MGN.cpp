@@ -108,7 +108,9 @@ bool MGN::init()
   this->Type1SCInit();
 
   this->attendFixGNSS();
-  this->lireGNSS();
+  do
+  {
+  } while (!this->lireGNSS());
 
   // On rallume la radio
   do
@@ -127,23 +129,24 @@ bool MGN::init()
 
 bool MGN::switchToLTE(void)
 {
+  char reply[255] = {0};
+
+  this->led_LTE->setEtat(1);
+  this->led_LTE->setFlashe(1);
+  this->led_LTE->allume();
+  this->led_NTN->setEtat(0);
+
   if (this->reseauActuel == RESEAU_LTE)
   {
     return true;
   }
 
   Serial.println("Changement reseau vers LTE.");
-  this->led_NTN->eteint();
-
-  if (!module->sendCommand("AT%RATACT=\"CATM\",1", "OK\0", 10000))
+  
+  do
   {
-    return false;
-  }
+  } while (!module->sendCommand("AT%RATACT=\"CATM\",1", "OK\0", reply, 10000));
 
-  this->led_LTE->setEtat(1);
-  this->led_LTE->setFlashe(1);
-  this->led_LTE->allume();
-  this->led_NTN->setEtat(0);
 
   this->reseauActuel = RESEAU_LTE;
   Serial.println("Reseau LTE.");
@@ -153,6 +156,12 @@ bool MGN::switchToLTE(void)
 
 bool MGN::switchToNTN(void)
 {
+  char reply[255] = {0};
+
+  this->led_NTN->setEtat(1);
+  this->led_NTN->setFlashe(1);
+  this->led_NTN->allume();
+  this->led_LTE->setEtat(0);
 
   if (this->reseauActuel == RESEAU_NTN)
   {
@@ -160,17 +169,10 @@ bool MGN::switchToNTN(void)
   }
 
   Serial.println("Changement reseau vers NTN.");
-  this->led_LTE->eteint();
 
-  if (!module->sendCommand("AT%RATACT=\"NBNTN\",1", "OK\0", 10000))
+  do
   {
-    return false;
-  }
-
-  this->led_NTN->setEtat(1);
-  this->led_NTN->setFlashe(1);
-  this->led_NTN->allume();
-  this->led_LTE->setEtat(0);
+  } while (!module->sendCommand("AT%RATACT=\"NBNTN\",1", "OK\0", reply, 10000));
 
   this->reseauActuel = RESEAU_NTN;
 
@@ -758,7 +760,9 @@ void MGN::update(void)
       this->messageEnvoye = 0;
       this->t_debut = millis();
       this->attendFixGNSS();
-      this->lireGNSS();
+      do
+      {
+      } while (!this->lireGNSS());
       uint8_t i = 0;
       do
       {
@@ -817,8 +821,9 @@ void MGN::update(void)
 
     // Moitié du temps écoulé dans la boucle de 10 min
     // Mettre if(1) pour tester la connexion au NTN
-    if (1) //! this->messageEnvoye && this->t_debut + this->TEMPS_BOUCLE / 2 < millis())
+    if (this->t_debut + this->TEMPS_BOUCLE / 2 < millis())
     {
+      this->messageEnvoye = false;
       if (this->reseauActuel != RESEAU_NTN)
       {
         uint8_t i = 0;
@@ -831,43 +836,3 @@ void MGN::update(void)
     }
   }
 }
-
-/*
-
-
-    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%SETACFG=\"radiom.config.multi_rat_enable\",\"true\"", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%SETACFG=\"radiom.config.preferred_rat_list\",\"none\"", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%SETACFG=\"radiom.config.auto_preference_mode\",\"none\"", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%SETACFG=\"locsrv.operation.locsrv_enable\",\"true\"", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%SETACFG=\"locsrv.internal_gnss.auto_restart\",\"enable\"", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%GETACFG=\"ntn.conf.gnss_in_use\"", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%SETACFG=\"modem_apps.Mode.AutoConnectMode\",\"true\"", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%RATIMGSEL=2", "OK\0", reply, 10000))
-      err = true;
-
-    // Cette commande semble retourner "ERROR" si la bande est deja selectionnee.
-    // A preceder d'une vérification !
-    module->sendCommand("AT%SETCFG=\"BAND\",\"23\"", "OK\0", reply, 10000);
-
-    if (!module->sendCommand("ATZ", "BOOTEV:0", reply, 10000))
-      err = true;
-
-    // Cette commande semble retourner "ERROR" si la radio est deja OFF.
-    // A preceder d'une vérification !
-    module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000);
-
-    if (!module->sendCommand("AT%NTNCFG=\"POS\",\"IGNSS\",\"1\"", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT+CEREG=2", "OK\0", reply, 10000))
-      err = true;
-    if (!module->sendCommand("AT%IGNSSACT=1", "OK\0", reply, 10000))
-*/
