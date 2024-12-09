@@ -32,6 +32,7 @@ public:
   const unsigned long TEMPS_BOUCLE = 600000L; // Temps en ms pour 10 minutes
   const unsigned long TEMPS_UPDATE = 2000;     // 200ms entre les requetes polling
   uint8_t messageEnvoye;
+  uint8_t messageNTNEnvoye;
   uint8_t reseauActuel;
   bool connected;
 

@@ -24,6 +24,8 @@ const uint8_t LIS2DTW12_CTRL5 = 0x24; // CTRL interrupts sleep et fifo
 const uint8_t LIS2DTW12_CTRL6 = 0x25; // CTRL Bandwidth et filtres
 const uint8_t LIS2DTW12_FIFO_CTRL = 0x2E; // CTRL FIFO. Bypass : 0x00
 
+const uint8_t LIS2DTW12_OUT_X_L = 0x28; // Byte faible accel X
+const uint8_t LIS2DTW12_OUT_X_H = 0x29; // Byte fort accel X
 const uint8_t LIS2DTW12_OUT_Z_L = 0x2C; // Byte faible accel z
 const uint8_t LIS2DTW12_OUT_Z_H = 0x2D; // Byte fort accel z
 

@@ -3166,6 +3166,8 @@
         <property key="periphComp5.gte" value="gt"/>
         <property key="periphComp6.gte" value="gt"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="/home/marc-fortier/Documents/elabore/L3-MGN/SOMv3_standalone.X/debug/tdd_hardware/SOMv3_standalone_ptg"/>
         <property key="programmerToGoImageName" value="SOMv3_standalone_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>

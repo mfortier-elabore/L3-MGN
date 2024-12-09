@@ -85,12 +85,15 @@ int main(void) {
     printf("\n================ Demarrage\n");
 
     while (1) {
-        //MCP7941X_runTests();
 
         if (update1W) {
             update1W = false;
             pollingCartouche();
             MGN_RunningHours_update();
+            printf("\nlow : %lu\thigh: %lu\tdigIn : %lu",
+                    MGN_RunningHours_getLowAccelCount(),
+                    MGN_RunningHours_getHighAccelCount(),
+                    MGN_RunningHours_getDigitalInCount());
         }
 
         CLRWDT();

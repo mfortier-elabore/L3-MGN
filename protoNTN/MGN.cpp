@@ -83,8 +83,8 @@ bool MGN::init()
   pinMode(BOUTON_PIN, INPUT_PULLUP);
 
   // leds
-  led_NTN = new LedManager(12);
-  led_LTE = new LedManager(11);
+  led_NTN = new LedManager(11);
+  led_LTE = new LedManager(12);
   led_RX = new LedManager(10);
 
   // Temps
@@ -757,7 +757,8 @@ void MGN::update(void)
     {
       this->closeSocket();
       Serial.println("Boucle terminee, nouvelle boucle.");
-      this->messageEnvoye = 0;
+      this->messageEnvoye = false;
+      this->messageNTNEnvoye = false;
       this->t_debut = millis();
       this->attendFixGNSS();
       do
@@ -789,6 +790,9 @@ void MGN::update(void)
         if (this->sendData())
         {
           this->messageEnvoye = 1;
+          if(this->reseauActuel == RESEAU_NTN) {
+            this->messageNTNEnvoye = true;
+          }
         }
         else
         {
@@ -821,7 +825,7 @@ void MGN::update(void)
 
     // Moitié du temps écoulé dans la boucle de 10 min
     // Mettre if(1) pour tester la connexion au NTN
-    if (this->t_debut + this->TEMPS_BOUCLE / 2 < millis())
+    if (this->t_debut + this->TEMPS_BOUCLE / 2 < millis() && this->messageNTNEnvoye == false)
     {
       this->messageEnvoye = false;
       if (this->reseauActuel != RESEAU_NTN)

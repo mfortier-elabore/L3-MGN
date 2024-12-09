@@ -85,6 +85,8 @@ void RunningHours_saveValue(RunningHours_t * rh) {
 }
 
 void MGN_RunningHours_init(void) {
+    LIS2DTW12_Create();
+    
     RunningHours_init(&lowAccelerometer, &MEMORY_ADDRESS_RUNNING_HOURS_LOWACCEL, WRITE_PERIOD, 30);
     RunningHours_init(&highAccelerometer, &MEMORY_ADDRESS_RUNNING_HOURS_HIGHACCEL, WRITE_PERIOD, 80);
     RunningHours_init(&digitalIn, &MEMORY_ADDRESS_RUNNING_HOURS_DIGITALIN, WRITE_PERIOD, 1);

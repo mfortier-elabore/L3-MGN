@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=mcc_generated_files/clkref/src/clkref.c mcc_generated_files/i2c_host/src/i2c1.c mcc_generated_files/nvm/src/nvm.c mcc_generated_files/system/src/interrupt.c mcc_generated_files/system/src/pins.c mcc_generated_files/system/src/clock.c mcc_generated_files/system/src/system.c mcc_generated_files/system/src/config_bits.c mcc_generated_files/timer/src/delay.c mcc_generated_files/timer/src/tmr2.c mcc_generated_files/timer/src/tmr0.c mcc_generated_files/uart/src/uart1.c tdd/LedsTest.c tdd/AllTests.c tdd/unity.c tdd/1-WireTest.c tdd/I2CHelperTest.c tdd/MCP7941XTest.c main.c 1-wire.c CFH.c MCP7941X.c leds.c I2CHelper.c LIS2DTW12.c tdd/LIS2DTW12Test.c runningHours.c tdd/runningHoursTests.c mcc_generated_files/uart/src/uart2.c mcc_generated_files/uart/src/uart3.c
+SOURCEFILES_QUOTED_IF_SPACED=mcc_generated_files/clkref/src/clkref.c mcc_generated_files/i2c_host/src/i2c1.c mcc_generated_files/nvm/src/nvm.c mcc_generated_files/system/src/interrupt.c mcc_generated_files/system/src/pins.c mcc_generated_files/system/src/clock.c mcc_generated_files/system/src/system.c mcc_generated_files/system/src/config_bits.c mcc_generated_files/timer/src/delay.c mcc_generated_files/timer/src/tmr2.c mcc_generated_files/timer/src/tmr0.c mcc_generated_files/uart/src/uart1.c mcc_generated_files/uart/src/uart2.c mcc_generated_files/uart/src/uart3.c tdd/LedsTest.c tdd/AllTests.c tdd/unity.c tdd/1-WireTest.c tdd/I2CHelperTest.c tdd/MCP7941XTest.c tdd/LIS2DTW12Test.c tdd/runningHoursTests.c main.c 1-wire.c CFH.c MCP7941X.c leds.c I2CHelper.c LIS2DTW12.c runningHours.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/mcc_generated_files/clkref/src/clkref.p1 ${OBJECTDIR}/mcc_generated_files/i2c_host/src/i2c1.p1 ${OBJECTDIR}/mcc_generated_files/nvm/src/nvm.p1 ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.p1 ${OBJECTDIR}/mcc_generated_files/system/src/pins.p1 ${OBJECTDIR}/mcc_generated_files/system/src/clock.p1 ${OBJECTDIR}/mcc_generated_files/system/src/system.p1 ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/delay.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/tmr2.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/tmr0.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1 ${OBJECTDIR}/tdd/LedsTest.p1 ${OBJECTDIR}/tdd/AllTests.p1 ${OBJECTDIR}/tdd/unity.p1 ${OBJECTDIR}/tdd/1-WireTest.p1 ${OBJECTDIR}/tdd/I2CHelperTest.p1 ${OBJECTDIR}/tdd/MCP7941XTest.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/1-wire.p1 ${OBJECTDIR}/CFH.p1 ${OBJECTDIR}/MCP7941X.p1 ${OBJECTDIR}/leds.p1 ${OBJECTDIR}/I2CHelper.p1 ${OBJECTDIR}/LIS2DTW12.p1 ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 ${OBJECTDIR}/runningHours.p1 ${OBJECTDIR}/tdd/runningHoursTests.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/mcc_generated_files/clkref/src/clkref.p1.d ${OBJECTDIR}/mcc_generated_files/i2c_host/src/i2c1.p1.d ${OBJECTDIR}/mcc_generated_files/nvm/src/nvm.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/pins.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/clock.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/system.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.p1.d ${OBJECTDIR}/mcc_generated_files/timer/src/delay.p1.d ${OBJECTDIR}/mcc_generated_files/timer/src/tmr2.p1.d ${OBJECTDIR}/mcc_generated_files/timer/src/tmr0.p1.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1.d ${OBJECTDIR}/tdd/LedsTest.p1.d ${OBJECTDIR}/tdd/AllTests.p1.d ${OBJECTDIR}/tdd/unity.p1.d ${OBJECTDIR}/tdd/1-WireTest.p1.d ${OBJECTDIR}/tdd/I2CHelperTest.p1.d ${OBJECTDIR}/tdd/MCP7941XTest.p1.d ${OBJECTDIR}/main.p1.d ${OBJECTDIR}/1-wire.p1.d ${OBJECTDIR}/CFH.p1.d ${OBJECTDIR}/MCP7941X.p1.d ${OBJECTDIR}/leds.p1.d ${OBJECTDIR}/I2CHelper.p1.d ${OBJECTDIR}/LIS2DTW12.p1.d ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d ${OBJECTDIR}/runningHours.p1.d ${OBJECTDIR}/tdd/runningHoursTests.p1.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/mcc_generated_files/clkref/src/clkref.p1 ${OBJECTDIR}/mcc_generated_files/i2c_host/src/i2c1.p1 ${OBJECTDIR}/mcc_generated_files/nvm/src/nvm.p1 ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.p1 ${OBJECTDIR}/mcc_generated_files/system/src/pins.p1 ${OBJECTDIR}/mcc_generated_files/system/src/clock.p1 ${OBJECTDIR}/mcc_generated_files/system/src/system.p1 ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/delay.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/tmr2.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/tmr0.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 ${OBJECTDIR}/tdd/LedsTest.p1 ${OBJECTDIR}/tdd/AllTests.p1 ${OBJECTDIR}/tdd/unity.p1 ${OBJECTDIR}/tdd/1-WireTest.p1 ${OBJECTDIR}/tdd/I2CHelperTest.p1 ${OBJECTDIR}/tdd/MCP7941XTest.p1 ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 ${OBJECTDIR}/tdd/runningHoursTests.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/1-wire.p1 ${OBJECTDIR}/CFH.p1 ${OBJECTDIR}/MCP7941X.p1 ${OBJECTDIR}/leds.p1 ${OBJECTDIR}/I2CHelper.p1 ${OBJECTDIR}/LIS2DTW12.p1 ${OBJECTDIR}/runningHours.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/mcc_generated_files/clkref/src/clkref.p1.d ${OBJECTDIR}/mcc_generated_files/i2c_host/src/i2c1.p1.d ${OBJECTDIR}/mcc_generated_files/nvm/src/nvm.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/pins.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/clock.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/system.p1.d ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.p1.d ${OBJECTDIR}/mcc_generated_files/timer/src/delay.p1.d ${OBJECTDIR}/mcc_generated_files/timer/src/tmr2.p1.d ${OBJECTDIR}/mcc_generated_files/timer/src/tmr0.p1.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d ${OBJECTDIR}/tdd/LedsTest.p1.d ${OBJECTDIR}/tdd/AllTests.p1.d ${OBJECTDIR}/tdd/unity.p1.d ${OBJECTDIR}/tdd/1-WireTest.p1.d ${OBJECTDIR}/tdd/I2CHelperTest.p1.d ${OBJECTDIR}/tdd/MCP7941XTest.p1.d ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d ${OBJECTDIR}/tdd/runningHoursTests.p1.d ${OBJECTDIR}/main.p1.d ${OBJECTDIR}/1-wire.p1.d ${OBJECTDIR}/CFH.p1.d ${OBJECTDIR}/MCP7941X.p1.d ${OBJECTDIR}/leds.p1.d ${OBJECTDIR}/I2CHelper.p1.d ${OBJECTDIR}/LIS2DTW12.p1.d ${OBJECTDIR}/runningHours.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/mcc_generated_files/clkref/src/clkref.p1 ${OBJECTDIR}/mcc_generated_files/i2c_host/src/i2c1.p1 ${OBJECTDIR}/mcc_generated_files/nvm/src/nvm.p1 ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.p1 ${OBJECTDIR}/mcc_generated_files/system/src/pins.p1 ${OBJECTDIR}/mcc_generated_files/system/src/clock.p1 ${OBJECTDIR}/mcc_generated_files/system/src/system.p1 ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/delay.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/tmr2.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/tmr0.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1 ${OBJECTDIR}/tdd/LedsTest.p1 ${OBJECTDIR}/tdd/AllTests.p1 ${OBJECTDIR}/tdd/unity.p1 ${OBJECTDIR}/tdd/1-WireTest.p1 ${OBJECTDIR}/tdd/I2CHelperTest.p1 ${OBJECTDIR}/tdd/MCP7941XTest.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/1-wire.p1 ${OBJECTDIR}/CFH.p1 ${OBJECTDIR}/MCP7941X.p1 ${OBJECTDIR}/leds.p1 ${OBJECTDIR}/I2CHelper.p1 ${OBJECTDIR}/LIS2DTW12.p1 ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 ${OBJECTDIR}/runningHours.p1 ${OBJECTDIR}/tdd/runningHoursTests.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1
+OBJECTFILES=${OBJECTDIR}/mcc_generated_files/clkref/src/clkref.p1 ${OBJECTDIR}/mcc_generated_files/i2c_host/src/i2c1.p1 ${OBJECTDIR}/mcc_generated_files/nvm/src/nvm.p1 ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.p1 ${OBJECTDIR}/mcc_generated_files/system/src/pins.p1 ${OBJECTDIR}/mcc_generated_files/system/src/clock.p1 ${OBJECTDIR}/mcc_generated_files/system/src/system.p1 ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/delay.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/tmr2.p1 ${OBJECTDIR}/mcc_generated_files/timer/src/tmr0.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 ${OBJECTDIR}/tdd/LedsTest.p1 ${OBJECTDIR}/tdd/AllTests.p1 ${OBJECTDIR}/tdd/unity.p1 ${OBJECTDIR}/tdd/1-WireTest.p1 ${OBJECTDIR}/tdd/I2CHelperTest.p1 ${OBJECTDIR}/tdd/MCP7941XTest.p1 ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 ${OBJECTDIR}/tdd/runningHoursTests.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/1-wire.p1 ${OBJECTDIR}/CFH.p1 ${OBJECTDIR}/MCP7941X.p1 ${OBJECTDIR}/leds.p1 ${OBJECTDIR}/I2CHelper.p1 ${OBJECTDIR}/LIS2DTW12.p1 ${OBJECTDIR}/runningHours.p1
 
 # Source Files
-SOURCEFILES=mcc_generated_files/clkref/src/clkref.c mcc_generated_files/i2c_host/src/i2c1.c mcc_generated_files/nvm/src/nvm.c mcc_generated_files/system/src/interrupt.c mcc_generated_files/system/src/pins.c mcc_generated_files/system/src/clock.c mcc_generated_files/system/src/system.c mcc_generated_files/system/src/config_bits.c mcc_generated_files/timer/src/delay.c mcc_generated_files/timer/src/tmr2.c mcc_generated_files/timer/src/tmr0.c mcc_generated_files/uart/src/uart1.c tdd/LedsTest.c tdd/AllTests.c tdd/unity.c tdd/1-WireTest.c tdd/I2CHelperTest.c tdd/MCP7941XTest.c main.c 1-wire.c CFH.c MCP7941X.c leds.c I2CHelper.c LIS2DTW12.c tdd/LIS2DTW12Test.c runningHours.c tdd/runningHoursTests.c mcc_generated_files/uart/src/uart2.c mcc_generated_files/uart/src/uart3.c
+SOURCEFILES=mcc_generated_files/clkref/src/clkref.c mcc_generated_files/i2c_host/src/i2c1.c mcc_generated_files/nvm/src/nvm.c mcc_generated_files/system/src/interrupt.c mcc_generated_files/system/src/pins.c mcc_generated_files/system/src/clock.c mcc_generated_files/system/src/system.c mcc_generated_files/system/src/config_bits.c mcc_generated_files/timer/src/delay.c mcc_generated_files/timer/src/tmr2.c mcc_generated_files/timer/src/tmr0.c mcc_generated_files/uart/src/uart1.c mcc_generated_files/uart/src/uart2.c mcc_generated_files/uart/src/uart3.c tdd/LedsTest.c tdd/AllTests.c tdd/unity.c tdd/1-WireTest.c tdd/I2CHelperTest.c tdd/MCP7941XTest.c tdd/LIS2DTW12Test.c tdd/runningHoursTests.c main.c 1-wire.c CFH.c MCP7941X.c leds.c I2CHelper.c LIS2DTW12.c runningHours.c
 
 
 
@@ -184,6 +184,22 @@ ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1: mcc_generated_files/uart/src
 	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1: mcc_generated_files/uart/src/uart2.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/uart/src" 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 mcc_generated_files/uart/src/uart2.c 
+	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1: mcc_generated_files/uart/src/uart3.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/uart/src" 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 mcc_generated_files/uart/src/uart3.c 
+	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 ${OBJECTDIR}/tdd/LedsTest.p1: tdd/LedsTest.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}/tdd" 
 	@${RM} ${OBJECTDIR}/tdd/LedsTest.p1.d 
@@ -231,6 +247,22 @@ ${OBJECTDIR}/tdd/MCP7941XTest.p1: tdd/MCP7941XTest.c  nbproject/Makefile-${CND_C
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/MCP7941XTest.p1 tdd/MCP7941XTest.c 
 	@-${MV} ${OBJECTDIR}/tdd/MCP7941XTest.d ${OBJECTDIR}/tdd/MCP7941XTest.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/tdd/MCP7941XTest.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/tdd/LIS2DTW12Test.p1: tdd/LIS2DTW12Test.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/tdd" 
+	@${RM} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d 
+	@${RM} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 tdd/LIS2DTW12Test.c 
+	@-${MV} ${OBJECTDIR}/tdd/LIS2DTW12Test.d ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/tdd/runningHoursTests.p1: tdd/runningHoursTests.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/tdd" 
+	@${RM} ${OBJECTDIR}/tdd/runningHoursTests.p1.d 
+	@${RM} ${OBJECTDIR}/tdd/runningHoursTests.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/runningHoursTests.p1 tdd/runningHoursTests.c 
+	@-${MV} ${OBJECTDIR}/tdd/runningHoursTests.d ${OBJECTDIR}/tdd/runningHoursTests.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/tdd/runningHoursTests.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 ${OBJECTDIR}/main.p1: main.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
@@ -288,14 +320,6 @@ ${OBJECTDIR}/LIS2DTW12.p1: LIS2DTW12.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/LIS2DTW12.d ${OBJECTDIR}/LIS2DTW12.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/LIS2DTW12.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-${OBJECTDIR}/tdd/LIS2DTW12Test.p1: tdd/LIS2DTW12Test.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}/tdd" 
-	@${RM} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d 
-	@${RM} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 tdd/LIS2DTW12Test.c 
-	@-${MV} ${OBJECTDIR}/tdd/LIS2DTW12Test.d ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
 ${OBJECTDIR}/runningHours.p1: runningHours.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/runningHours.p1.d 
@@ -303,30 +327,6 @@ ${OBJECTDIR}/runningHours.p1: runningHours.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/runningHours.p1 runningHours.c 
 	@-${MV} ${OBJECTDIR}/runningHours.d ${OBJECTDIR}/runningHours.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/runningHours.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/tdd/runningHoursTests.p1: tdd/runningHoursTests.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}/tdd" 
-	@${RM} ${OBJECTDIR}/tdd/runningHoursTests.p1.d 
-	@${RM} ${OBJECTDIR}/tdd/runningHoursTests.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/runningHoursTests.p1 tdd/runningHoursTests.c 
-	@-${MV} ${OBJECTDIR}/tdd/runningHoursTests.d ${OBJECTDIR}/tdd/runningHoursTests.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/tdd/runningHoursTests.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1: mcc_generated_files/uart/src/uart2.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/uart/src" 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 mcc_generated_files/uart/src/uart2.c 
-	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1: mcc_generated_files/uart/src/uart3.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/uart/src" 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 mcc_generated_files/uart/src/uart3.c 
-	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 else
 ${OBJECTDIR}/mcc_generated_files/clkref/src/clkref.p1: mcc_generated_files/clkref/src/clkref.c  nbproject/Makefile-${CND_CONF}.mk 
@@ -425,6 +425,22 @@ ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1: mcc_generated_files/uart/src
 	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart1.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1: mcc_generated_files/uart/src/uart2.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/uart/src" 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 mcc_generated_files/uart/src/uart2.c 
+	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1: mcc_generated_files/uart/src/uart3.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/uart/src" 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 mcc_generated_files/uart/src/uart3.c 
+	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 ${OBJECTDIR}/tdd/LedsTest.p1: tdd/LedsTest.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}/tdd" 
 	@${RM} ${OBJECTDIR}/tdd/LedsTest.p1.d 
@@ -472,6 +488,22 @@ ${OBJECTDIR}/tdd/MCP7941XTest.p1: tdd/MCP7941XTest.c  nbproject/Makefile-${CND_C
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/MCP7941XTest.p1 tdd/MCP7941XTest.c 
 	@-${MV} ${OBJECTDIR}/tdd/MCP7941XTest.d ${OBJECTDIR}/tdd/MCP7941XTest.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/tdd/MCP7941XTest.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/tdd/LIS2DTW12Test.p1: tdd/LIS2DTW12Test.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/tdd" 
+	@${RM} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d 
+	@${RM} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 tdd/LIS2DTW12Test.c 
+	@-${MV} ${OBJECTDIR}/tdd/LIS2DTW12Test.d ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/tdd/runningHoursTests.p1: tdd/runningHoursTests.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}/tdd" 
+	@${RM} ${OBJECTDIR}/tdd/runningHoursTests.p1.d 
+	@${RM} ${OBJECTDIR}/tdd/runningHoursTests.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/runningHoursTests.p1 tdd/runningHoursTests.c 
+	@-${MV} ${OBJECTDIR}/tdd/runningHoursTests.d ${OBJECTDIR}/tdd/runningHoursTests.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/tdd/runningHoursTests.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 ${OBJECTDIR}/main.p1: main.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
@@ -529,14 +561,6 @@ ${OBJECTDIR}/LIS2DTW12.p1: LIS2DTW12.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/LIS2DTW12.d ${OBJECTDIR}/LIS2DTW12.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/LIS2DTW12.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-${OBJECTDIR}/tdd/LIS2DTW12Test.p1: tdd/LIS2DTW12Test.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}/tdd" 
-	@${RM} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d 
-	@${RM} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/LIS2DTW12Test.p1 tdd/LIS2DTW12Test.c 
-	@-${MV} ${OBJECTDIR}/tdd/LIS2DTW12Test.d ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/tdd/LIS2DTW12Test.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
 ${OBJECTDIR}/runningHours.p1: runningHours.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/runningHours.p1.d 
@@ -544,30 +568,6 @@ ${OBJECTDIR}/runningHours.p1: runningHours.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/runningHours.p1 runningHours.c 
 	@-${MV} ${OBJECTDIR}/runningHours.d ${OBJECTDIR}/runningHours.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/runningHours.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/tdd/runningHoursTests.p1: tdd/runningHoursTests.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}/tdd" 
-	@${RM} ${OBJECTDIR}/tdd/runningHoursTests.p1.d 
-	@${RM} ${OBJECTDIR}/tdd/runningHoursTests.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/tdd/runningHoursTests.p1 tdd/runningHoursTests.c 
-	@-${MV} ${OBJECTDIR}/tdd/runningHoursTests.d ${OBJECTDIR}/tdd/runningHoursTests.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/tdd/runningHoursTests.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1: mcc_generated_files/uart/src/uart2.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/uart/src" 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1 mcc_generated_files/uart/src/uart2.c 
-	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart2.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1: mcc_generated_files/uart/src/uart3.c  nbproject/Makefile-${CND_CONF}.mk 
-	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/uart/src" 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 
-	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -fno-short-double -fno-short-float -memi=wordwrite -O0 -fasmfile -maddrqual=require -DTDD_HARDWARE -DXC8_TOOLCHAIN -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_tdd_hardware=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1 mcc_generated_files/uart/src/uart3.c 
-	@-${MV} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.d ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/mcc_generated_files/uart/src/uart3.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 

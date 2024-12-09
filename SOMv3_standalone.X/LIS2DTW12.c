@@ -60,6 +60,12 @@ int16_t LIS2DTW12_ReadZAxis(void) {
     return data;
 }
 
+int16_t LIS2DTW12_ReadXAxis(void) {
+    int16_t data;
+    I2CHelper_ReadMultipleRegisters(LIS2DTW12_ADDR, &LIS2DTW12_OUT_X_L, &data, 2);
+    return data;
+}
+
 void LIS2DTW12_Destroy(void)
 {
 }
@@ -69,7 +75,9 @@ void LIS2DTW12_updateMovingAverage(uint16_t * ma, uint16_t value, float alpha) {
 }
 
 void LIS2DTW12_Update(void) {
-    accel.lastValue = LIS2DTW12_ReadZAxis();
+    //accel.lastValue = LIS2DTW12_ReadZAxis();
+    int16_t val = LIS2DTW12_ReadXAxis();
+    accel.lastValue = abs(val);
     
     LIS2DTW12_updateMovingAverage(&accel.slowMovingAverage, accel.lastValue, 0.2);
     
@@ -80,7 +88,7 @@ void LIS2DTW12_Update(void) {
     }
     
     LIS2DTW12_updateMovingAverage(&accel.fastMovingAverage, accel.filteredValue, 0.2);
-    //printf("\nval : %hu\tslow: %hu\tfast : %hu", accel.lastValue, accel.slowMovingAverage, accel.fastMovingAverage);
+    printf("\nval : %hu\tval2 : %hi\tslow: %hu\tfast : %hu", accel.lastValue, val, accel.slowMovingAverage, accel.fastMovingAverage);
 }
 
 uint16_t LIS2DTW12_GetValue(void) {
