@@ -16,6 +16,14 @@
                     <name>default</name>
                     <type>2</type>
                 </confElem>
+                <confElem>
+                    <name>tdd_software</name>
+                    <type>2</type>
+                </confElem>
+                <confElem>
+                    <name>tdd_hardware</name>
+                    <type>2</type>
+                </confElem>
             </confList>
             <formatting>
                 <project-formatting-style>false</project-formatting-style>

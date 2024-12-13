@@ -7,9 +7,10 @@
  */
 
 #include "CFH.h"
+#include "LIS2DTW12.h"
+#include "runningHours.h"
 
-#ifdef XC8_TOOLCHAIN
-#else // Définitions pour les tests unitaires
+#ifdef TDD_SOFTWARE
 uint8_t fakeMem[16];
 #endif
 
@@ -29,6 +30,14 @@ bool update1W = false;
  */
 void TMR0_2s_ISR() {
     update1W = true;
+}
+
+void printCartouche(uint8_t * pCartouche) {
+    uint8_t byte;
+    for (uint24_t i = 0; i < 8; ++i) {
+        byte = pCartouche[i];
+        printf(" %x", pCartouche[i]);
+    }
 }
 
 /**
@@ -51,6 +60,7 @@ void pollingCartouche(void) {
 
     // Effectue la mise à jour demandée au passage précédent
     if (attenteUpdateRTC) {
+        printf("Ajustement du temps.\n");
         MCP7941X_setTime(&maintenant);
         attenteUpdateRTC = false;
         setEtatLED(etat_configDone);
@@ -62,6 +72,7 @@ void pollingCartouche(void) {
     // Lecture du temps en prévision de l'écriture dans le iButton
     MCP7941X_getTime(&maintenant);
     maintenant_epoch = (uint32_t) mktime(&maintenant);
+    //printf("Temps epoch : %lu\n", maintenant_epoch);
 
     // Détection de la cartouche et lecture du ROM
     uint8_t test = ow_reset();
@@ -78,10 +89,10 @@ void pollingCartouche(void) {
         dejaFait = false; // Mémorisation pour config RTC
         return;
     }
-    
-    test = do_crc(cartouche, 8*sizeof(uint8_t));
-    
-    if(test != 0) {
+
+    test = do_crc(cartouche, 8 * sizeof (uint8_t));
+
+    if (test != 0) {
         return;
     }
 
@@ -121,7 +132,7 @@ void pollingCartouche(void) {
  * @param cartouche variable qui contiendra le ROM de la cartouche en cours
  */
 void getCartoucheInstallee(uint8_t * cartouche) {
-    for (uint8_t i = 0; i < 8; ++i) {
+    for (uint24_t i = 0; i < 8; ++i) {
         cartouche[i] = EEPROM_Read(MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL + i);
     }
 }
@@ -133,7 +144,7 @@ void getCartoucheInstallee(uint8_t * cartouche) {
 void setCartoucheInstallee(uint8_t * pCartouche) {
     uint8_t byte;
     // Écriture des 8 bytes de l'adresse
-    for (uint8_t i = 0; i < 8; ++i) {
+    for (uint24_t i = 0; i < 8; ++i) {
         byte = pCartouche[i];
         EEPROM_Write(MEMORY_ADDRESS_LAST_CARTRIDGE_SERIAL + i, byte);
     }
@@ -179,11 +190,19 @@ bool cartoucheDejaInstallee(uint8_t * nouvelleCartouche) {
  * @param nouvelleCartouche
  */
 void executerCartoucheROM(uint8_t * nouvelleCartouche) {
+    printf("Cartouche ROM detectee.\n");
     // Vérifie s'il s'agit d'une nouvelle cartouche
     if (!cartoucheDejaInstallee(nouvelleCartouche)) {
+        printf("\tNouvelle cartouche : ");
+        printCartouche(nouvelleCartouche);
+        printf("\n\tetait : ");
+        uint8_t cartoucheInstallee[8];
+        getCartoucheInstallee(cartoucheInstallee);
+        printCartouche(&cartoucheInstallee[0]);
+        printf("\n");
+
         // Sauvegarde locale du serial de la nouvelle cartouche
         setCartoucheInstallee(nouvelleCartouche);
-        setEtatLED(etat_erreur);
 
         // Écriture initiale des paramètres dans la nouvelle cartouche
         ecrireNouvelleCartouche();
@@ -223,13 +242,15 @@ bool ecrireDateRetrait(uint8_t *p_pCartridge) {
     uint8_t writesCount[4] = {0};
     bool success = true;
 
+    printf("\tEcriture date retrait (1x/heure)\n");
+
     // Date removed est écrit a deux emplacements mémoire
 
     //------------------------------------
     //------------------------------------
     // Premier bloc :
     // - Writes count (4 bytes)
-    // - Date removes (4 bytes)
+    // - Date removed (4 bytes)
 
     // Lecture et incrémentation du nombre actuel d'écritures, 
     // à placer dans le buffer [0:3]
@@ -249,8 +270,14 @@ bool ecrireDateRetrait(uint8_t *p_pCartridge) {
         dateRemoved[i] = buffer[i + 4]; // En prévision du calcul du crc
     }
 
+    printf("\tDate removed : %lu\n", maintenant_epoch);
+    printf("\tWrite count : %lu (%lu)\n", uValue, flip(uValue));
+
+
     // Premiere écriture
     success &= ow_write8bytes(CARTRIDGE_WRITES_COUNT2, buffer);
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 1 ######\n");
 
     //------------------------------------
     //------------------------------------
@@ -268,12 +295,17 @@ bool ecrireDateRetrait(uint8_t *p_pCartridge) {
 
     // Écriture à l'adresse principale
     success &= ow_write8bytes(CARTRIDGE_ADDRESS_DATE_INSTALLED, buffer);
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 2 ######\n");
 
     //------------------------------------
     //------------------------------------
     // Troisième bloc :
     uint8_t crc_dateRemoved = do_crc(dateRemoved, sizeof (uint32_t));
     uint8_t crc_writesCount = do_crc(writesCount, sizeof (uint32_t));
+
+    printf("\tCRC date removed : %i\n", crc_dateRemoved);
+    printf("\tCRC write count : %i\n", crc_writesCount);
 
     for (uint8_t i = 0; i < 8; ++i) {
         buffer[i] = 0;
@@ -284,6 +316,67 @@ bool ecrireDateRetrait(uint8_t *p_pCartridge) {
 
     // Écriture à l'adresse principale
     success &= ow_write8bytes(CARTRIDGE_WRITES_COUNT_CRC, buffer);
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 3 ######\n");
+
+    //------------------------------------
+    //------------------------------------
+    // Quatrieme bloc : reecriture du write count
+    // Lecture de la mémoire actuelle et réécriture par dessus
+
+    ow_readMemory_Safe(p_pCartridge, CARTRIDGE_ADDRESS_MODE, buffer, 8 * sizeof (uint8_t));
+
+    for (uint8_t i = 0; i < 4; ++i) {
+        buffer[i + 1] = writesCount[i];
+    }
+
+    success &= ow_write8bytes(CARTRIDGE_ADDRESS_MODE, buffer);
+
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 4 ######\n");
+    
+    //------------------------------------
+    //------------------------------------
+    // Cinquieme bloc :
+    // - Running Hours low threshold (4 bytes)
+    // - Running Hour digital in threshold (4 bytes)
+    uValue2 = MGN_RunningHours_getLowAccelCount();
+    printf("\tRunning hours low : %lu\n", uValue2);
+    for (uint8_t i = 0; i < 4; ++i) {
+        buffer[i] = ((uint8_t *) & uValue2)[i];
+    }
+    
+    uValue2 = MGN_RunningHours_getDigitalInCount();
+    printf("\tRunning hours digitalIn : %lu\n", uValue2);
+    for (uint8_t i = 0; i < 4; ++i) {
+        buffer[i+4] = ((uint8_t *) & uValue2)[i];
+    }
+
+    // Cinquieme écriture
+    success &= ow_write8bytes(CARTRIDGE_RUNNING_HOURS_1, buffer);
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 5 ######\n");
+    
+        //------------------------------------
+    //------------------------------------
+    // Sixieme bloc :
+    // - Running Hour high threshold (4 bytes)
+    
+    uValue2 = MGN_RunningHours_getHighAccelCount();
+    printf("\tRunning hours high : %lu\n", uValue2);
+    for (uint8_t i = 0; i < 4; ++i) {
+        buffer[i] = ((uint8_t *) & uValue2)[i];
+    }
+    
+    // le reste = 0
+    for (uint8_t i = 0; i < 4; ++i) {
+        buffer[i+4] = 0;
+    }
+
+    // Cinquieme écriture
+    success &= ow_write8bytes(CARTRIDGE_RUNNING_HOURS_3, buffer);
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 6 ######\n");
 
     return success;
 }
@@ -303,6 +396,8 @@ void ecrireNouvelleCartouche() {
     // Date d'installation
     uint8_t dateInstallation[4] = {0};
     uValue = maintenant_epoch;
+
+    printf("\tEcriture nouvelle cartouche\n");
 
     for (uint8_t i = 0; i < 4; ++i) {
         dateInstallation[i] = ((uint8_t *) & uValue)[i];
@@ -343,6 +438,10 @@ void ecrireNouvelleCartouche() {
     success = 0;
     //do {
     success = ow_write8bytes(CARTRIDGE_ADDRESS_HOST_MODEL, buffer);
+
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 1 ######\n");
+
     //} while (!success);
 
     //------------------------------------
@@ -363,7 +462,8 @@ void ecrireNouvelleCartouche() {
     //do {
     success = ow_write8bytes(CARTRIDGE_ADDRESS_HOST_MODEL + 8, buffer);
     //} while (!success);
-
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 2 ######\n");
 
     //------------------------------------
     //------------------------------------
@@ -382,27 +482,26 @@ void ecrireNouvelleCartouche() {
     success = 0;
     //do {
     success = ow_write8bytes(CARTRIDGE_ADDRESS_DATE_INSTALLED, buffer);
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 3 ######\n");
+
     //} while (!success);
     // Écriture 2e emplacement mémoire pour redondance. Les lectures suivantes
     // visent cet emplacement, et pas CARTRIDGE_ADDRESS_DATE_INSTALLED.
     success = 0;
     //do {
     success = ow_write8bytes(CARTRIDGE_ADDRESS_DATE_INSTALLED2, buffer);
-    //} while (!success);
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 4 ######\n");
 
-    //------------------------------------
-    //------------------------------------
-    // Quatrième bloc de 8 bytes : 
-    // iub_2, le numéro de série unique de la base, 2e emplacement mémoire
-    success = 0;
-    //do {
-    success = ow_write8bytes(CARTRIDGE_ADDRESS_HOST_SERIAL2, iub); // redondance
     //} while (!success);
     //------------------------------------
     //------------------------------------
     // Cinquieme bloc de 8 bytes :
-    // crc du iub (1 byte)
-    // crc de Data Installed (1 byte)
+    // 0-3 : Date installed (4 bytes)
+    // 4 crc du iub (1 byte)
+    // 5 crc de Date Installed (1 byte)
+    // 6-8 : 0
 
     // Calcul des CRC pour iub et date installed
     uint8_t crc_iub = do_crc(iub, 8 * sizeof (uint8_t));
@@ -413,19 +512,28 @@ void ecrireNouvelleCartouche() {
         buffer[i] = 0; // le reste = 0
     }
 
-    buffer[0] = crc_iub;
-    buffer[1] = crc_dateInstalled; // Adresse suivante de crc iub
+    for (uint8_t i = 0; i < 4; ++i) {
+        buffer[i] = dateInstallation[i];
+    }
+
+    buffer[4] = crc_iub;
+    buffer[5] = crc_dateInstalled; // Adresse suivante de crc iub
+    buffer[6] = 0;
+    buffer[7] = 0;
 
     // Écriture des crc
     success = 0;
     //do {
-    success = ow_write8bytes(CARTRIDGE_ADDRESS_HOST_SERIAL_CRC, buffer);
+    success = ow_write8bytes(CARTRIDGE_ADDRESS_DATE_INSTALLED2, buffer);
+    if (!success)
+        printf("\t####### ECHEC ECRITURE 5 ######\n");
+
     //} while (!success);
     // Commande d'écriture de la date de retrait au prochain cycle
     prochaineEcriture_epoch = maintenant_epoch;
-    
-    if(success){
-    	printf("Success.\n");
+
+    if (success) {
+        printf("\tEcriture reussie.\n");
     }
 }
 

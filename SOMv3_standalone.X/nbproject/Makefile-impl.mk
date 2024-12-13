@@ -31,7 +31,7 @@ DEFAULTCONF=default
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=default 
+ALLCONFS=default tdd_software tdd_hardware 
 
 
 # build
@@ -46,12 +46,16 @@ ALLCONFS=default
 # clobber
 .clobber-impl: .clobber-pre .depcheck-impl
 	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=default clean
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=tdd_software clean
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=tdd_hardware clean
 
 
 
 # all
 .all-impl: .all-pre .depcheck-impl
 	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=default build
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=tdd_software build
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=tdd_hardware build
 
 
 

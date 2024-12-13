@@ -1,11 +1,12 @@
 #include "I2CHelper.h"
 
-#ifdef XC8_TOOLCHAIN
-#else
-uint8_t fakeI2CDevices[0xFF][0xFF];
+#if defined(TDD_SOFTWARE) || defined(TDD_HARDWARE)
+uint8_t fakeI2CDevices[0x02][0xFF];
 uint8_t selectedFakeI2CDevice = 0;
 uint8_t selectedFakeI2CDeviceRegister = 0;
+#endif
 
+#ifdef TDD_SOFTWARE
 enum {
     WAITING_REGISTER = 1, WAITING_DATA = 2
 };
@@ -61,22 +62,32 @@ void I2CHelper_Create(void) {
 
 void I2CHelper_Destroy(void) {
 }
+
+#define __delay_us(x)              do { } while(0);
 #endif
 
-void I2CHelper_WriteRegister(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data) {
-    I2C1_Host.Write(deviceAddress, &registerAddress, 1);
-    I2C1_Host.Write(deviceAddress, data, 1);
+void I2CHelper_WriteRegister(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data) {
+    uint8_t regAndData[2];
+    regAndData[0] = *registerAddress;
+    regAndData[1] = *data;
+    
+    I2C1_Host.Write(deviceAddress, &regAndData, 2);
+    __delay_us(100);
 }
 
-void I2CHelper_ReadRegister(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data) {
-    I2C1_Host.WriteRead(deviceAddress, &registerAddress, 1, data, 1);
+void I2CHelper_ReadRegister(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data) {
+    I2C1_Host.WriteRead(deviceAddress, registerAddress, 1, data, 1);
+    __delay_us(100);
 }
 
-void I2CHelper_ReadMultipleRegisters(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data, size_t length) {
-    I2C1_Host.WriteRead(deviceAddress, &registerAddress, 1, data, length);
+void I2CHelper_ReadMultipleRegisters(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data, size_t length) {
+    I2C1_Host.WriteRead(deviceAddress, registerAddress, 1, data, length);
+    __delay_us(100);
 }
 
-void I2CHelper_WriteMultipleRegisters(uint8_t deviceAddress, uint8_t registerAddress, uint8_t * data, size_t length) {
-    I2C1_Host.Write(deviceAddress, &registerAddress, 1);
+void I2CHelper_WriteMultipleRegisters(uint8_t deviceAddress, uint8_t * registerAddress, uint8_t * data, size_t length) {
+    I2C1_Host.Write(deviceAddress, registerAddress, 1);
+    __delay_us(100);
     I2C1_Host.Write(deviceAddress, data, length);
+    __delay_us(100);
 }

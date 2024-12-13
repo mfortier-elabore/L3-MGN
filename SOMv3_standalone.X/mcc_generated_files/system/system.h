@@ -46,6 +46,8 @@
 #include "../timer/tmr0.h"
 #include "../timer/tmr2.h"
 #include "../uart/uart1.h"
+#include "../uart/uart2.h"
+#include "../uart/uart3.h"
 #include "../system/interrupt.h"
 #include "../system/clock.h"
 

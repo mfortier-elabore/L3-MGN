@@ -12,14 +12,14 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#ifdef XC8_TOOLCHAIN
-#include <xc.h>
-#include "mcc_generated_files/system/system.h"
-#else
+#ifdef TDD_SOFTWARE
 extern uint8_t fakeLedPinValue;
 #define IO_LED_SetHigh()            do { fakeLedPinValue = 1; } while(0)
 #define IO_LED_SetLow()             do { fakeLedPinValue = 0; } while(0)
 #define IO_LED_Toggle()             do { fakeLedPinValue = ~fakeLedPinValue; } while(0)
+#else
+#include <xc.h>
+#include "mcc_generated_files/system/system.h"
 #endif
 
 // PWM de la LED

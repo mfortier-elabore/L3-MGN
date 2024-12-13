@@ -25,40 +25,78 @@
     TOTAL LIABILITY ON ALL CLAIMS RELATED TO THE SOFTWARE WILL NOT 
     EXCEED AMOUNT OF FEES, IF ANY, YOU PAID DIRECTLY TO MICROCHIP FOR 
     THIS SOFTWARE.
-*/
-#ifdef XC8_TOOLCHAIN
+ */
+#ifndef TDD_SOFTWARE
 #include "mcc_generated_files/system/system.h"
 #include "CFH.h"
+#else
+#define CLRWDT()              do { } while(0);
+#endif
+
+#if defined(TDD_SOFTWARE) || defined(TDD_HARDWARE)
+#include "tdd/AllTests.h"
+#endif
+
+#include "runningHours.h"
 
 /*
     Main application
-*/
+ */
 
-int main(void)
-{
+int main(void) {
+#ifndef TDD_SOFTWARE
     SYSTEM_Initialize();
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts 
     // Use the following macros to: 
-    
+
+    // Ajout pour pin CTS, mappee a une entree non implmentee = RD0
+    U1CTSPPS = 0x18;
+
     // Enable the Global Interrupts
     INTERRUPT_GlobalInterruptEnable();
 
-    // Enable the Peripheral Interrupts
-    //INTERRUPT_PeripheralInterruptEnable();
+    // Deverouille le EEPROM
+    NVM_UnlockKeySet(UNLOCK_KEY);
 
     TMR0_OverflowCallbackRegister(TMR0_2s_ISR);
     TMR2_OverflowCallbackRegister(gestionLED);
-    
+#endif
+
+    MGN_RunningHours_init();
+
+#if defined(TDD_SOFTWARE) || defined(TDD_HARDWARE)
+
+    RunAllTests();
+
     while (1) {
-        //MCP7941X_runTests();
+        CLRWDT();
+        if (update1W) {
+            update1W = false;
+            MGN_RunningHours_update();
+            printf("\nlow : %lu\thigh: %lu\tdigIn : %lu",
+                    MGN_RunningHours_getLowAccelCount(),
+                    MGN_RunningHours_getHighAccelCount(),
+                    MGN_RunningHours_getDigitalInCount());
+        }
+    }
+#else
+
+    printf("\n================ Demarrage\n");
+
+    while (1) {
 
         if (update1W) {
-            pollingCartouche();
             update1W = false;
+            pollingCartouche();
+            MGN_RunningHours_update();
+            printf("\nlow : %lu\thigh: %lu\tdigIn : %lu",
+                    MGN_RunningHours_getLowAccelCount(),
+                    MGN_RunningHours_getHighAccelCount(),
+                    MGN_RunningHours_getDigitalInCount());
         }
 
         CLRWDT();
     }
-}
 #endif
+}

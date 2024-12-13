@@ -64,7 +64,7 @@
 
 //CONFIG5
 #pragma config WDTCPS = WDTCPS_31     // WDT Period Select->Divider ratio 1:65536; software control of WDTPS
-#pragma config WDTE = OFF     // WDT Operating Mode->WDT Disabled; SWDTEN is ignored
+#pragma config WDTE = SWDTEN     // WDT Operating Mode->WDT enabled/disabled by SWDTEN bit
 
 //CONFIG6
 #pragma config WDTCWS = WDTCWS_7     // WDT Window Select->window always open (100%); software control; keyed access not required

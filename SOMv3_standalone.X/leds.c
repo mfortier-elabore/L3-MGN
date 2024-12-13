@@ -8,12 +8,11 @@
 
 #include "leds.h"
 
-#ifdef XC8_TOOLCHAIN
-#else
+#ifdef TDD_SOFTWARE
 uint8_t fakeLedPinValue = 0;
 #endif
 
-// deux variables globales pour la gestin des modes pour les dels
+// deux variables globales pour la gestion des modes pour les dels
 enum etatSortie_t etat_LED;
 uint8_t nbTick50ms = 0; // Nombre de 50ms
 
@@ -22,11 +21,9 @@ uint8_t nbTick50ms = 0; // Nombre de 50ms
  * @param etat Nouvel état de la led
  */
 void setEtatLED(enum etatSortie_t etat) {
-    if (etat_LED != etat_erreur && etat_LED != etat_configuration) {
-        if (etat_LED != etat) {
-            nbTick50ms = 0;
-            etat_LED = etat;
-        }
+    if (etat_LED != etat) {
+        nbTick50ms = 0;
+        etat_LED = etat;
     }
 }
 
