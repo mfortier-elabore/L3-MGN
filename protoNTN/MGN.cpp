@@ -2,6 +2,10 @@
 #include "AT_commands.h"
 #include "runningHours.h"
 
+//#define SEULEMENT_NTN
+
+void (*resetFunc)(void) = 0;
+
 MGN::MGN(ATcommands *mod)
 {
   this->module = mod;
@@ -21,14 +25,27 @@ bool MGN::Type1SCInit()
   Serial.println("Initialisation du module type1SC ... ");
   Serial.print("Attente demarrage ");
 
-  // Config module
-  do
+  uint8_t maxloop = 255;
+  while (!module->sendCommand("AT", "OK", reply, 20000))
   {
     Serial.print(".");
-  } while (!module->sendCommand("AT", "OK", reply, 20000));
+
+    delay(TEMPS_UPDATE);
+    maxloop--;
+
+    if (maxloop == 0)
+    {
+      Serial.println("Le type1SC ne repond pas. Redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
+
+  }
   Serial.println(" OK!");
 
   Serial.print("Configuration ...");
+
+  maxloop = 255;
 
   do
   {
@@ -71,6 +88,16 @@ bool MGN::Type1SCInit()
     /*    if (!module->sendCommand("AT%GETACFG=\"ntn.conf.gnss_in_use\"", "OK\0", reply, 10000))
           err = true;*/
 
+    delay(TEMPS_UPDATE);
+    maxloop--;
+
+    if (maxloop == 0)
+    {
+      Serial.println("Impossible de configurer le type1SC. Redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
+
   } while (err);
   Serial.println(" OK!");
 
@@ -108,13 +135,33 @@ bool MGN::init()
   this->Type1SCInit();
 
   this->attendFixGNSS();
+  uint8_t maxloop = 255;
   do
   {
+    delay(TEMPS_UPDATE);
+    maxloop--;
+
+    if (maxloop == 0)
+    {
+      Serial.println("Impossible d'avoir un fix GNSS. Redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
   } while (!this->lireGNSS());
 
   // On rallume la radio
+  maxloop = 255;
   do
   {
+    delay(TEMPS_UPDATE);
+    maxloop--;
+
+    if (maxloop == 0)
+    {
+      Serial.println("Impossible d'allumer la radio. Redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
   } while (!module->sendCommand("AT+CFUN=1", "OK\0", reply, 10000));
 
   // Reseau par defaut = LTE
@@ -129,6 +176,9 @@ bool MGN::init()
 
 bool MGN::switchToLTE(void)
 {
+  #ifdef SEULEMENT_NTN
+  return switchToNTN();
+  #endif
   char reply[255] = {0};
 
   this->led_LTE->setEtat(1);
@@ -142,11 +192,20 @@ bool MGN::switchToLTE(void)
   }
 
   Serial.println("Changement reseau vers LTE.");
-  
-  do
-  {
-  } while (!module->sendCommand("AT%RATACT=\"CATM\",1", "OK\0", reply, 10000));
 
+  uint8_t maxloop = 255;
+  while (!module->sendCommand("AT%RATACT=\"CATM\",1", "OK\0", reply, 10000))
+  {
+    delay(TEMPS_UPDATE);
+    maxloop--;
+
+    if (maxloop == 0)
+    {
+      Serial.println("Impossible de configurer le reseau LTE. Redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
+  }
 
   this->reseauActuel = RESEAU_LTE;
   Serial.println("Reseau LTE.");
@@ -170,9 +229,19 @@ bool MGN::switchToNTN(void)
 
   Serial.println("Changement reseau vers NTN.");
 
-  do
+  uint8_t maxloop = 255;
+  while (!module->sendCommand("AT%RATACT=\"NBNTN\",1", "OK\0", reply, 10000))
   {
-  } while (!module->sendCommand("AT%RATACT=\"NBNTN\",1", "OK\0", reply, 10000));
+    delay(TEMPS_UPDATE);
+    maxloop--;
+
+    if (maxloop == 0)
+    {
+      Serial.println("Impossible de configurer le reseau LTE. Redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
+  }
 
   this->reseauActuel = RESEAU_NTN;
 
@@ -297,7 +366,7 @@ bool MGN::closeSocket(void)
   Serial.println("Socket ferme. ");
   if (!module->sendCommand("AT%SOCKETCMD=\"DELETE\",1", "OK\0", reply, 10000))
   {
-    Serial.println("Erreur! ");
+    Serial.println("Erreur : impossible de supprimer le socket. ");
     return false;
   }
 }
@@ -377,14 +446,28 @@ void MGN::attendFixGNSS(void)
   this->led_NTN->setEtat(0);
   this->led_LTE->setEtat(0);
   uint8_t enter = 0;
+  uint8_t maxloop = 255;
 
-  module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000);
+  while (!module->sendCommand("AT+CFUN=0", "OK\0", reply, 10000))
+  {
+    delay(TEMPS_UPDATE);
+    maxloop--;
 
+    if (maxloop == 0)
+    {
+      Serial.println("Impossible d'eteindre la radio, redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
+  }
+
+  maxloop = 255;
   do
   {
     module->sendCommand("AT%IGNSSINFO=\"FIX\"", "OK\0", reply, 10000);
     if (strstr(reply, "%IGNSSINFO: 2") != NULL)
     {
+      // Fix trouvé, sortie de la boucle
       break;
     }
 
@@ -397,7 +480,6 @@ void MGN::attendFixGNSS(void)
       module->sendCommand("AT%IGNSSACT=1", "OK\0", 10000);
     }
 
-    delay(500);
     Serial.print(".");
     ++enter;
     if (enter > 100)
@@ -406,13 +488,38 @@ void MGN::attendFixGNSS(void)
       Serial.println();
     }
 
-    this->updateLeds();
+    for (uint8_t i = 0; i < 10; ++i)
+    {
+      delay(TEMPS_UPDATE / 10);
+      this->updateLeds();
+    }
+
+    maxloop--;
+    if (maxloop == 0)
+    {
+      Serial.println("Impossible de trouver un fix GNSS, redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
+
   } while (1);
 
   this->led_RX->setEtat(0);
   this->led_RX->setFlashe(0);
 
-  module->sendCommand("AT+CFUN=1", "OK\0", reply, 10000);
+  maxloop = 255;
+  while (!module->sendCommand("AT+CFUN=1", "OK\0", reply, 10000))
+  {
+    delay(TEMPS_UPDATE);
+
+    maxloop--;
+    if (maxloop == 0)
+    {
+      Serial.println("Impossible d'allumer la radio, redemarrage ...");
+      delay(1000);
+      resetFunc();
+    }
+  }
 
   Serial.println(" OK!");
 }
@@ -642,10 +749,7 @@ void MGN::decodeMessage(char *message)
   }
   else if (byte0 == 1) // Set ID
   {
-    if (byte1 != 0)
-    {
-      this->setID(byte1);
-    }
+    this->setID(byte1);
   }
 }
 
@@ -742,13 +846,13 @@ void MGN::update(void)
 {
   static unsigned long dernier_update = 0;
   updateLeds();
-  MGN_RunningHours_update();
-  this->running_minutes = MGN_RunningHours_getDigitalInCount();
   delay(10);
 
   // Delai entre les requetes
   if (dernier_update + TEMPS_UPDATE < millis())
   {
+    MGN_RunningHours_update();
+    this->running_minutes = MGN_RunningHours_getDigitalInCount();
 
     dernier_update = millis();
 
@@ -761,15 +865,22 @@ void MGN::update(void)
       this->messageNTNEnvoye = false;
       this->t_debut = millis();
       this->attendFixGNSS();
-      do
+
+      uint8_t maxloop = 255;
+      while (!this->lireGNSS())
       {
-      } while (!this->lireGNSS());
-      uint8_t i = 0;
-      do
-      {
-        delay(10);
-        ++i;
-      } while (!this->switchToLTE() && i < 50);
+        delay(TEMPS_UPDATE);
+        maxloop--;
+
+        if (maxloop == 0)
+        {
+          Serial.println("Impossible d'avoir un fix GNSS. Redemarrage ...");
+          delay(1000);
+          resetFunc();
+        }
+      }
+
+      this->switchToLTE();
       Serial.print("Attente de connexion ");
     }
     else
@@ -790,7 +901,8 @@ void MGN::update(void)
         if (this->sendData())
         {
           this->messageEnvoye = 1;
-          if(this->reseauActuel == RESEAU_NTN) {
+          if (this->reseauActuel == RESEAU_NTN)
+          {
             this->messageNTNEnvoye = true;
           }
         }
@@ -828,15 +940,7 @@ void MGN::update(void)
     if (this->t_debut + this->TEMPS_BOUCLE / 2 < millis() && this->messageNTNEnvoye == false)
     {
       this->messageEnvoye = false;
-      if (this->reseauActuel != RESEAU_NTN)
-      {
-        uint8_t i = 0;
-        do
-        {
-          delay(10);
-          ++i;
-        } while (!this->switchToNTN() && i < 5);
-      }
+      this->switchToNTN();
     }
   }
 }
